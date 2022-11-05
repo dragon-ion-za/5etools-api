@@ -10,9 +10,9 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 
-app.get('/adventures', (req, res) => {
+app.get('/adventures', (req: any, res: any) => {
     fs.readFile(
-        "../data/adventures.json", "utf8", (err, jsonString) => {
+        "../data/adventures.json", "utf8", (err: any, jsonString: any) => {
             if (err) {
               console.log("File read failed:", err);
               return;
