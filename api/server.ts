@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");  
 const fs = require("fs");
 
+import AdventureModel from './models/adventure.model'
 
 const app = express();
   
@@ -18,7 +19,10 @@ app.get('/adventures', (req: any, res: any) => {
               return;
             }
 
-            let adventures = JSON.parse(jsonString);
+            let adventures: AdventureModel[] = [];
+            let jsonAdventures = JSON.parse(jsonString);
+
+            adventures = jsonAdventures.adventure.map((x: any) => new AdventureModel(x.name, x.id, x.level.start, x.level.end));
 
             res.send(adventures);
     });
