@@ -3,6 +3,9 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 
 import AdventureModel from './models/adventure.model'
+import { CreatureModel } from './models/creature.model'
+import { CreatureEntity } from './entities/creature.entity'
+import { creatureEntityToModelConverter } from './converters/creature.converter';
 
 const app = express();
   
@@ -49,6 +52,22 @@ app.get('/adventures/:id', (req: any, res: any) => {
 
             res.send(adventure);
     });
+});
+
+app.get('/creatures', (req: any, res: any) => {
+    const files = ['bestiary-mm.json', 'bestiary-dmg.json', 'bestiary-phb.json', 'bestiary-idrotf.json'];
+
+    let creatures: CreatureModel[] = [];
+
+    files.forEach(file => {
+        let jsonString = fs.readFileSync(`../data/bestiary/${file}`, 'utf8');
+        let jsonCreatures = JSON.parse(jsonString);
+        creatures.push(jsonCreatures.monster
+            .filter((x: CreatureEntity) => x._copy == null)
+            .map((x: CreatureEntity) => creatureEntityToModelConverter(x)));
+    });
+
+    res.send(creatures);
 });
   
 app.listen(5001, function() {
