@@ -42,43 +42,50 @@ function convertSizeToEnum(entitySize: string[]) : CreatureSizes {
     }
 }
 
-function convertToArmourClassModel(entityAc: Ac[] | number[]): ArmourClassModel {
-    let acArray: Ac[] = entityAc as Ac[];
-
-    console.log(entityAc);
-    console.log(acArray);
-    if (!acArray) {
-        return new ArmourClassModel((entityAc as number[])[0], '');
-    } else {
-        return new ArmourClassModel(acArray[0].ac, acArray[0].from[0] ?? '');
+function convertToArmourClassModel(entityAc: Ac[] | number[]): ArmourClassModel {    
+    if (typeof entityAc[0] === "number") {
+        let acNumbers: number[] = entityAc as number[];
+        return new ArmourClassModel(acNumbers[0], '');
+    } else {        
+        let acArray: Ac[] = entityAc as Ac[];
+        let acModel = new ArmourClassModel(acArray[0].ac, acArray[0].from?.[0] ?? '');
+        acArray.slice(1).forEach(acEntity => {
+            acModel.alternateForms.push(new ArmourClassModel(acEntity.ac, acEntity.from?.[0] ?? '', acEntity.condition));
+        })
+        return acModel;
     }
 }
 
 function convertToFlyingSpeed(entityFly: ComplexSpeed | number): number {
-    let fly = entityFly as ComplexSpeed;
+    if (!entityFly) return 0;
 
-    if (!fly) {
+    if (typeof entityFly === "number") {
         return entityFly as number;
     } else {
+        let fly = entityFly as ComplexSpeed;
         return fly.number;
     }
 }
 
 function buildSpeedConditions(entitySpeed: Speed): string[] {
     let speedConditions: string[] = [];
-    let fly = entitySpeed.fly as ComplexSpeed;
 
-    if (fly && fly.condition !== '') {
-        speedConditions.push(fly.condition);
+    if (entitySpeed.fly && typeof entitySpeed.fly === "object") {
+        let fly = entitySpeed.fly as ComplexSpeed;
+        if (fly.condition !== '') {
+            speedConditions.push(fly.condition);
+        }
     }
 
     return speedConditions;
 }
 
 function buildSkillModifiers(entitySkill: any): SkillModifierModel[] {
+    if (!entitySkill) return [];
+
     let skillMods: SkillModifierModel[] = [];
 
-    Object.keys(entitySkill).forEach((key, index) => {
+    Object.keys(entitySkill).forEach((key, index) => {        
         skillMods.push(new SkillModifierModel(key, entitySkill[index] as number));
     });
 

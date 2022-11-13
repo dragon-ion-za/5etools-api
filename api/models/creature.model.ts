@@ -11,10 +11,13 @@ export enum CreatureSizes {
 export class ArmourClassModel {
     armourClass: number;
     appliedFrom: string;
+    condition: string = '';
+    alternateForms: ArmourClassModel[] = [];
 
-    constructor(ac: number, appliedFrom: string ) {
+    constructor(ac: number, appliedFrom: string, condition: string = '') {
         this.armourClass = ac;
         this.appliedFrom = appliedFrom;
+        this.condition = condition;
     }
 }
 

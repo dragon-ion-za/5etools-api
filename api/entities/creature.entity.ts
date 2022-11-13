@@ -10,6 +10,7 @@ export interface Type {
 export interface Ac {
     ac: number;
     from: string[];
+    condition: string;
 }
 
 export interface Hp {
