@@ -50,8 +50,11 @@ export class CreatureModel {
     hitpointSpecial: string = '';
     walkingSpeed: number = 0;
     climbingSpeed: number = 0;
+    burrowingSpeed: number = 0;
     swimmingSpeed: number = 0;
     flyingSpeed: number = 0;
+    canHover: boolean = false;
+    speedConditions: string[] = [];
     attributeStr: number = 0;
     attributeDex: number = 0;
     attributeCon: number = 0;

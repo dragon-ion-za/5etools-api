@@ -15,15 +15,21 @@ export interface Ac {
 export interface Hp {
     average: number;
     formula: string;
+    special: string;
 }
 
 export interface Speed {
     walk: number;
-    fly: number;
+    climb: number;
+    burrow: number;
+    swim: number;
+    fly: ComplexSpeed | number;
+    canHover: boolean;
 }
 
-export interface Skill {
-    perception: string;
+export interface ComplexSpeed {
+    number: number;
+    condition: string;
 }
 
 export interface Trait {
@@ -69,7 +75,7 @@ export interface CreatureEntity {
     int: number;
     wis: number;
     cha: number;
-    skill: Skill;
+    skill: object;
     passive: number;
     languages: string[];
     cr: string;
