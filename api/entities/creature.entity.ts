@@ -63,6 +63,7 @@ export interface ComplexResist {
 export interface CreatureEntity {
     name: string;
     _copy: Copy;
+    _isCopy: boolean;
     source: string;
     page: number;
     otherSources: OtherSource[];

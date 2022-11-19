@@ -58,13 +58,16 @@ app.get('/creatures', (req: any, res: any) => {
     const files = ['bestiary-mm.json', 'bestiary-dmg.json', 'bestiary-phb.json', 'bestiary-idrotf.json'];
 
     let creatures: CreatureModel[] = [];
+    let dataFilter = BuildOdataCreatureFilter(req.query);
 
     files.forEach(file => {
         let jsonString = fs.readFileSync(`../data/bestiary/${file}`, 'utf8');
         let jsonCreatures = JSON.parse(jsonString);
-        creatures.push(jsonCreatures.monster
+        jsonCreatures.monster
             .filter((x: CreatureEntity) => x._copy == null)
-            .map((x: CreatureEntity) => creatureEntityToModelConverter(x)));
+            .filter((x: CreatureEntity) => dataFilter(x))
+            .map((x: CreatureEntity) => creatureEntityToModelConverter(x))
+            .forEach((x: CreatureModel) => creatures.push(x));
     });
 
     res.send(creatures);
@@ -73,3 +76,29 @@ app.get('/creatures', (req: any, res: any) => {
 app.listen(5001, function() {
     console.log("Server started on port 5001");
 });
+
+function BuildOdataCreatureFilter(reqQuery: any) : (x: CreatureEntity) => any {
+
+    if (reqQuery.$filter) {
+        let filterValues: string[] = reqQuery.$filter.split(' ');
+
+        return (x: CreatureEntity) => { 
+            type ObjectKey = keyof typeof x;
+            const filterKey = filterValues[0] as ObjectKey;
+
+            console.log(x[filterKey]);
+
+            switch (filterValues[1]) {
+                case 'like':
+                    return (x[filterKey] as string).toLocaleLowerCase().indexOf(filterValues[2]) > -1;
+
+                default:
+                    return (x[filterKey] as string).toLocaleLowerCase() === filterValues[2];
+            }
+
+            
+        };
+    }
+
+    return (x: CreatureEntity) => { return true; };
+}
