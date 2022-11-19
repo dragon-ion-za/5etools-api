@@ -38,11 +38,6 @@ export interface Trait {
     entries: string[];
 }
 
-export interface Action {
-    name: string;
-    entries: string[];
-}
-
 export interface SoundClip {
     type: string;
     path: string;
@@ -56,6 +51,13 @@ export interface Copy {
     name: string;
     source: string;
     _mod: Mod;
+}
+
+export interface ComplexResist {
+    special: string;
+    resist: string[];
+    note: string;
+    cond: boolean;
 }
 
 export interface CreatureEntity {
@@ -81,7 +83,8 @@ export interface CreatureEntity {
     languages: string[];
     cr: string;
     trait: Trait[];
-    action: Action[];
+    action: Trait[];
+    reaction: Trait[];
     environment: string[];
     soundClip: SoundClip;
     languageTags: string[];
@@ -90,4 +93,7 @@ export interface CreatureEntity {
     hasToken: boolean;
     hasFluff: boolean;
     hasFluffImages: boolean;
+    resist: object;
+    immune: string[];
+    conditionImmune: string[];
 }

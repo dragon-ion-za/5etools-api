@@ -1,5 +1,5 @@
-import { Ac, CreatureEntity, ComplexSpeed, Speed, Type } from "../entities/creature.entity";
-import { ArmourClassModel, CreatureModel, CreatureSizes, SkillModifierModel } from "../models/creature.model";
+import { Ac, CreatureEntity, ComplexSpeed, Speed, Type, ComplexResist, Trait } from "../entities/creature.entity";
+import { ArmourClassModel, CreatureModel, CreatureSizes, CreatureTraitModel, ResistanceModel, SkillModifierModel } from "../models/creature.model";
 
 export function creatureEntityToModelConverter(entity: CreatureEntity): CreatureModel {
     let model: CreatureModel = new CreatureModel(entity.name);
@@ -26,6 +26,14 @@ export function creatureEntityToModelConverter(entity: CreatureEntity): Creature
     model.attributeStr = entity.str;
     model.attributeWis = entity.wis;
     model.skillModifiers = buildSkillModifiers(entity.skill);
+    model.passivePerception = entity.passive;
+    model.resistances = buildResistances(entity.resist);
+    model.immunities = buildImmunities(entity.immune, entity.conditionImmune);
+    model.languages = entity.languages;
+    model.challengeRating = Number.parseInt(entity.cr);
+    model.traits = buildTraits(entity.trait);
+    model.actions = buildTraits(entity.action);
+    model.reactions = buildTraits(entity.reaction);
 
     return model;
 };
@@ -90,4 +98,44 @@ function buildSkillModifiers(entitySkill: any): SkillModifierModel[] {
     });
 
     return skillMods;
+}
+
+function buildResistances(entityResist: any): ResistanceModel[] {
+    if (!entityResist) return [];
+
+    let resistances: ResistanceModel[] = [];
+
+    Object.keys(entityResist).forEach((key, index) => {
+        if (typeof entityResist[index] === 'string') {
+            resistances.push(new ResistanceModel(entityResist[index] as string, ''));
+        } else {
+            let complexEntityResist: ComplexResist = entityResist[index] as ComplexResist;
+
+            if (complexEntityResist.special) {
+                resistances.push(new ResistanceModel(complexEntityResist.special, 'special'));
+            } else {
+                complexEntityResist.resist.forEach(x => resistances.push(new ResistanceModel(x, complexEntityResist.note)));
+            }
+        }
+        
+    });
+
+    return resistances;
+}
+
+function buildImmunities(entityImmune: string[], entityConditionImmune: string[]): string[] {
+    let immunities: string[] = [];
+
+    entityImmune?.forEach(x => immunities.push(x));
+    entityConditionImmune?.forEach(x => immunities.push(x));
+
+    return immunities;
+}
+
+function buildTraits(entityTraits: Trait[]) : CreatureTraitModel[] {
+    let traits: CreatureTraitModel[] = [];
+
+    entityTraits?.forEach(x => traits.push(new CreatureTraitModel(x.name, x.entries)));
+
+    return traits;
 }

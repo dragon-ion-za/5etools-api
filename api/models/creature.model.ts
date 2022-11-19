@@ -41,6 +41,16 @@ export class CreatureTraitModel {
     }
 }
 
+export class ResistanceModel {
+    resistantTo: string;
+    condition: string;
+
+    constructor(resistantTo: string, condition: string) {
+        this.resistantTo = resistantTo;
+        this.condition = condition;
+    }
+}
+
 export class CreatureModel {
     name: string;
     sourceId: string = '';
@@ -66,7 +76,7 @@ export class CreatureModel {
     attributeCha: number = 0;
     skillModifiers: SkillModifierModel[] = [];
     passivePerception: number = 0;
-    resistences: string[] = [];
+    resistances: ResistanceModel[] = [];
     immunities: string[] = [];
     languages: string[] = [];
     challengeRating: number = 0;
