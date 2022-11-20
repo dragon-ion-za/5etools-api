@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");  
 const fs = require("fs");
+const cors = require('cors');
 
 import AdventureModel from './models/adventure.model'
 import { CreatureModel } from './models/creature.model'
@@ -8,6 +9,10 @@ import { CreatureEntity } from './entities/creature.entity'
 import { creatureEntityToModelConverter } from './converters/creature.converter';
 
 const app = express();
+
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
   
 app.use(bodyParser.urlencoded({
     extended: true
@@ -86,14 +91,15 @@ function BuildOdataCreatureFilter(reqQuery: any) : (x: CreatureEntity) => any {
             type ObjectKey = keyof typeof x;
             const filterKey = filterValues[0] as ObjectKey;
 
-            console.log(x[filterKey]);
+            let searchValue = filterValues.slice(2).join(' ');
+            console.log(searchValue);
 
             switch (filterValues[1]) {
                 case 'like':
-                    return (x[filterKey] as string).toLocaleLowerCase().indexOf(filterValues[2]) > -1;
+                    return (x[filterKey] as string).toLocaleLowerCase().indexOf(searchValue) > -1;
 
                 default:
-                    return (x[filterKey] as string).toLocaleLowerCase() === filterValues[2];
+                    return (x[filterKey] as string).toLocaleLowerCase() === searchValue;
             }
 
             
