@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");  
 const fs = require("fs");
 const cors = require('cors');
+const path = require('path');
 
 import AdventureModel from './models/adventure.model'
 import { CreatureModel } from './models/creature.model'
@@ -77,6 +78,10 @@ app.get('/creatures', (req: any, res: any) => {
 
     res.send(creatures);
 });
+
+app.get('/creatures/image/:sourceId/:name', (req: any, res: any) => {
+    res.sendFile(`img/${req.params.sourceId}/${req.params.name}.png`, { root: path.join(__dirname, '../') });
+});
   
 app.listen(5001, function() {
     console.log("Server started on port 5001");
@@ -92,7 +97,6 @@ function BuildOdataCreatureFilter(reqQuery: any) : (x: CreatureEntity) => any {
             const filterKey = filterValues[0] as ObjectKey;
 
             let searchValue = filterValues.slice(2).join(' ');
-            console.log(searchValue);
 
             switch (filterValues[1]) {
                 case 'like':
