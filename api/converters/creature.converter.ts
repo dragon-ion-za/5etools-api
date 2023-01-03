@@ -1,4 +1,4 @@
-import { Ac, CreatureEntity, ComplexSpeed, Speed, Type, ComplexResist, Trait } from "../entities/creature.entity";
+import { Ac, CreatureEntity, ComplexSpeed, Speed, Type, ComplexResist, ComplexImmunity, Trait } from "../entities/creature.entity";
 import { ArmourClassModel, CreatureModel, CreatureSizes, CreatureTraitModel, ResistanceModel, SkillModifierModel } from "../models/creature.model";
 
 export function creatureEntityToModelConverter(entity: CreatureEntity): CreatureModel {
@@ -123,11 +123,42 @@ function buildResistances(entityResist: any): ResistanceModel[] {
     return resistances;
 }
 
-function buildImmunities(entityImmune: string[], entityConditionImmune: string[]): string[] {
-    let immunities: string[] = [];
+function buildImmunities(entityImmune: any, entityConditionImmune: any): ResistanceModel[] {
+    let immunities: ResistanceModel[] = [];
+    
+    if (entityImmune) {
+        Object.keys(entityImmune ?? []).forEach((key, index) => {
+            if (typeof entityImmune[index] === 'string') {
+                immunities.push(new ResistanceModel(entityImmune[index] as string, ''));
+            } else {
+                let complexEntityResist: ComplexImmunity = entityImmune[index] as ComplexImmunity;
+    
+                if (complexEntityResist.special) {
+                    immunities.push(new ResistanceModel(complexEntityResist.special, 'special'));
+                } else {
+                    complexEntityResist.immune.forEach(x => immunities.push(new ResistanceModel(x, complexEntityResist.note)));
+                }
+            }
+            
+        });
+    }
 
-    entityImmune?.forEach(x => immunities.push(x));
-    entityConditionImmune?.forEach(x => immunities.push(x));
+    if (entityConditionImmune) {
+        Object.keys(entityConditionImmune ?? []).forEach((key, index) => {
+            if (typeof entityConditionImmune[index] === 'string') {
+                immunities.push(new ResistanceModel(entityConditionImmune[index] as string, ''));
+            } else {
+                let complexEntityResist: ComplexImmunity = entityConditionImmune[index] as ComplexImmunity;
+    
+                if (complexEntityResist.special) {
+                    immunities.push(new ResistanceModel(complexEntityResist.special, 'special'));
+                } else {
+                    complexEntityResist.immune.forEach(x => immunities.push(new ResistanceModel(x, complexEntityResist.note)));
+                }
+            }
+            
+        });
+    }
 
     return immunities;
 }

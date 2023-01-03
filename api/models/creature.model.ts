@@ -51,6 +51,20 @@ export class ResistanceModel {
     }
 }
 
+export class SpellcastingModel {
+    name: string;
+    headerEntries: string[];
+    will: string[];
+    ability: string;
+
+    constructor(name: string, headerEntries: string[], will: string[], ability: string) {
+        this.name = name;
+        this.headerEntries = headerEntries;
+        this.will = will;
+        this.ability = ability;
+    }
+}
+
 export class CreatureModel {
     name: string;
     sourceId: string = '';
@@ -77,12 +91,13 @@ export class CreatureModel {
     skillModifiers: SkillModifierModel[] = [];
     passivePerception: number = 0;
     resistances: ResistanceModel[] = [];
-    immunities: string[] = [];
+    immunities: ResistanceModel[] = [];
     languages: string[] = [];
     challengeRating: number = 0;
     traits: CreatureTraitModel[] = [];
     actions: CreatureTraitModel[] = [];
     reactions: CreatureTraitModel[] = [];
+    spellcasting: SpellcastingModel[] = [];
 
     constructor (name: string) {
         this.name = name;

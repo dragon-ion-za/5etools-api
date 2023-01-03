@@ -60,6 +60,13 @@ export interface ComplexResist {
     cond: boolean;
 }
 
+export interface ComplexImmunity {
+    special: string;
+    immune: string[];
+    note: string;
+    cond: boolean;
+}
+
 export interface CreatureEntity {
     name: string;
     _copy: Copy;
