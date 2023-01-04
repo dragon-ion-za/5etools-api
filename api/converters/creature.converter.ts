@@ -178,6 +178,7 @@ function buildSpellcasting(entitySpellcasting: Spellcasting[]) : SpellcastingMod
     entitySpellcasting?.forEach((spellcasting: Spellcasting) => {
         let model: SpellcastingModel = new SpellcastingModel();
         model.name = spellcasting.name;
+        model.entries = spellcasting.headerEntries.concat(spellcasting.footerEntries);
         model.ability = spellcasting.ability;
 
         if (spellcasting.will && spellcasting.will.length > 0) {

@@ -70,6 +70,7 @@ export interface ComplexImmunity {
 export interface Spellcasting {
     name: string;
     headerEntries: string[];
+    footerEntries: string[];
     spells: { [key: string] : KnownSpells };
     will: string[];
     daily: { [key: string] : string[] };
