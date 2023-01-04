@@ -1,5 +1,5 @@
-import { Ac, CreatureEntity, ComplexSpeed, Speed, Type, ComplexResist, ComplexImmunity, Trait } from "../entities/creature.entity";
-import { ArmourClassModel, CreatureModel, CreatureSizes, CreatureTraitModel, ResistanceModel, SkillModifierModel } from "../models/creature.model";
+import { Ac, CreatureEntity, ComplexSpeed, Speed, Type, ComplexResist, ComplexImmunity, Trait, Spellcasting } from "../entities/creature.entity";
+import { ArmourClassModel, CreatureModel, CreatureSizes, CreatureTraitModel, KnownSpellsModel, ResistanceModel, SkillModifierModel, SpellcastingModel, SpellTypes } from "../models/creature.model";
 
 export function creatureEntityToModelConverter(entity: CreatureEntity): CreatureModel {
     let model: CreatureModel = new CreatureModel(entity.name);
@@ -34,6 +34,7 @@ export function creatureEntityToModelConverter(entity: CreatureEntity): Creature
     model.traits = buildTraits(entity.trait);
     model.actions = buildTraits(entity.action);
     model.reactions = buildTraits(entity.reaction);
+    model.spellcasting = buildSpellcasting(entity.spellcasting);
 
     return model;
 };
@@ -169,4 +170,61 @@ function buildTraits(entityTraits: Trait[]) : CreatureTraitModel[] {
     entityTraits?.forEach(x => traits.push(new CreatureTraitModel(x.name, x.entries)));
 
     return traits;
+}
+
+function buildSpellcasting(entitySpellcasting: Spellcasting[]) : SpellcastingModel[] {
+    let spells: SpellcastingModel[] = [];
+
+    entitySpellcasting?.forEach((spellcasting: Spellcasting) => {
+        let model: SpellcastingModel = new SpellcastingModel();
+        model.name = spellcasting.name;
+        model.ability = spellcasting.ability;
+
+        if (spellcasting.will && spellcasting.will.length > 0) {
+            spellcasting.will.forEach(x => model.atWill.push(x));
+        }
+
+        if (spellcasting.daily !== undefined) {
+            for (const key in spellcasting.daily){
+                let limitedSpells: KnownSpellsModel = new KnownSpellsModel();
+
+                let matches = key.matchAll(/(\n?)(\w?)/g);
+                let resourceLimit: string = '';
+                let resourceLimitType: string = '';
+
+                for (const match of matches) {
+                    if (match.index === 0) {
+                        resourceLimit = match[0];
+                    }
+                    if (match.index === 1) {
+                        resourceLimitType = match[0];
+                    }
+                }
+
+                switch (resourceLimitType) {
+                    case '': limitedSpells.type = SpellTypes.Daily; break;
+                    case 'e': limitedSpells.type = SpellTypes.Each; break;
+                    default: limitedSpells.type = SpellTypes.Unknown;
+                }
+
+                limitedSpells.resource = resourceLimit;
+                spellcasting.daily[key].forEach(x => limitedSpells.spells.push(x));
+                model.withResources.push(limitedSpells);
+            }
+        }
+
+        if (spellcasting.spells !== undefined) {
+            for (const key in spellcasting.spells){
+                let limitedSpells: KnownSpellsModel = new KnownSpellsModel();
+                limitedSpells.type = SpellTypes.Slot;
+                limitedSpells.resource = (spellcasting.spells[key].slots ?? 0).toString();
+                limitedSpells.level = key;
+                spellcasting.spells[key].spells.forEach(x => limitedSpells.spells.push(x));
+                model.withResources.push(limitedSpells);
+            }
+        }
+
+        spells.push(model);
+    });
+    return spells;
 }

@@ -8,6 +8,13 @@ export enum CreatureSizes {
     Gargantuant
 }
 
+export enum SpellTypes {
+    Unknown = 0,
+    Slot,
+    Daily,
+    Each
+}
+
 export class ArmourClassModel {
     armourClass: number;
     appliedFrom: string;
@@ -52,17 +59,18 @@ export class ResistanceModel {
 }
 
 export class SpellcastingModel {
-    name: string;
-    headerEntries: string[];
-    will: string[];
-    ability: string;
+    name: string = '';
+    entries: string[] = [];
+    atWill: string[] = [];
+    withResources: KnownSpellsModel[] = [];
+    ability: string = '';
+}
 
-    constructor(name: string, headerEntries: string[], will: string[], ability: string) {
-        this.name = name;
-        this.headerEntries = headerEntries;
-        this.will = will;
-        this.ability = ability;
-    }
+export class KnownSpellsModel {
+    type: SpellTypes = SpellTypes.Unknown;
+    resource: string = '';
+    level: string = '';
+    spells: string[] = [];
 }
 
 export class CreatureModel {

@@ -67,6 +67,21 @@ export interface ComplexImmunity {
     cond: boolean;
 }
 
+export interface Spellcasting {
+    name: string;
+    headerEntries: string[];
+    spells: { [key: string] : KnownSpells };
+    will: string[];
+    daily: { [key: string] : string[] };
+    ability: string;
+    hidden: string[];
+}
+
+export interface KnownSpells {
+    slots: number;
+    spells: string[];
+}
+
 export interface CreatureEntity {
     name: string;
     _copy: Copy;
@@ -104,4 +119,5 @@ export interface CreatureEntity {
     resist: object;
     immune: string[];
     conditionImmune: string[];
+    spellcasting: Spellcasting[];
 }
