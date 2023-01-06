@@ -109,6 +109,8 @@ export interface CreatureEntity {
     trait: Trait[];
     action: Trait[];
     reaction: Trait[];
+    legendary: Trait[];
+    legendaryActions: number;
     environment: string[];
     soundClip: SoundClip;
     languageTags: string[];

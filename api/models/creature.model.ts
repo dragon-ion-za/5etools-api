@@ -105,6 +105,8 @@ export class CreatureModel {
     traits: CreatureTraitModel[] = [];
     actions: CreatureTraitModel[] = [];
     reactions: CreatureTraitModel[] = [];
+    legendaryActions: CreatureTraitModel[] = [];
+    legendaryCount: number = 3;
     spellcasting: SpellcastingModel[] = [];
 
     constructor (name: string) {

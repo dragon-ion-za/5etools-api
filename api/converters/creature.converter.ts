@@ -34,6 +34,8 @@ export function creatureEntityToModelConverter(entity: CreatureEntity): Creature
     model.traits = buildTraits(entity.trait);
     model.actions = buildTraits(entity.action);
     model.reactions = buildTraits(entity.reaction);
+    model.legendaryActions = buildTraits(entity.legendary);
+    model.legendaryCount = entity.legendaryActions ?? 3;
     model.spellcasting = buildSpellcasting(entity.spellcasting);
 
     return model;
