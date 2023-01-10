@@ -73,6 +73,11 @@ export class KnownSpellsModel {
     spells: string[] = [];
 }
 
+export class SpecialActionModel {
+    type: string = '';
+    items: string[] = [];
+}
+
 export class CreatureModel {
     name: string;
     sourceId: string = '';
@@ -108,6 +113,9 @@ export class CreatureModel {
     legendaryActions: CreatureTraitModel[] = [];
     legendaryCount: number = 3;
     spellcasting: SpellcastingModel[] = [];
+    lairActions: SpecialActionModel[] = [];
+    regionalEffects: SpecialActionModel[] = [];
+    mythicEncounter: SpecialActionModel[] = [];
 
     constructor (name: string) {
         this.name = name;

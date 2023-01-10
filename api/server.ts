@@ -8,6 +8,7 @@ import AdventureModel from './models/adventure.model'
 import { CreatureModel } from './models/creature.model'
 import { CreatureEntity } from './entities/creature.entity'
 import { creatureEntityToModelConverter } from './converters/creature.converter';
+import { LegendaryGroupEntity } from './entities/legendary-group.entity';
 
 const app = express();
 
@@ -66,13 +67,16 @@ app.get('/creatures', (req: any, res: any) => {
     let creatures: CreatureModel[] = [];
     let dataFilter = BuildOdataCreatureFilter(req.query);
 
+    let legendaryGroupsString = fs.readFileSync(`../data/bestiary/legendarygroups.json`, 'utf8');
+    let legendaryGroups = JSON.parse(legendaryGroupsString);
+
     files.forEach(file => {
         let jsonString = fs.readFileSync(`../data/bestiary/${file}`, 'utf8');
         let jsonCreatures = JSON.parse(jsonString);
         jsonCreatures.monster
             .filter((x: CreatureEntity) => x._copy == null)
             .filter((x: CreatureEntity) => dataFilter(x))
-            .map((x: CreatureEntity) => creatureEntityToModelConverter(x))
+            .map((x: CreatureEntity) => creatureEntityToModelConverter(x, legendaryGroups.legendaryGroup))
             .forEach((x: CreatureModel) => creatures.push(x));
     });
 

@@ -1,7 +1,8 @@
 import { Ac, CreatureEntity, ComplexSpeed, Speed, Type, ComplexResist, ComplexImmunity, Trait, Spellcasting } from "../entities/creature.entity";
-import { ArmourClassModel, CreatureModel, CreatureSizes, CreatureTraitModel, KnownSpellsModel, ResistanceModel, SkillModifierModel, SpellcastingModel, SpellTypes } from "../models/creature.model";
+import { ComplexLegendaryGroupItem, LegendaryGroupEntity } from "../entities/legendary-group.entity";
+import { ArmourClassModel, CreatureModel, CreatureSizes, CreatureTraitModel, KnownSpellsModel, ResistanceModel, SkillModifierModel, SpecialActionModel, SpellcastingModel, SpellTypes } from "../models/creature.model";
 
-export function creatureEntityToModelConverter(entity: CreatureEntity): CreatureModel {
+export function creatureEntityToModelConverter(entity: CreatureEntity, legendaryGroups: LegendaryGroupEntity[]): CreatureModel {
     let model: CreatureModel = new CreatureModel(entity.name);
 
     model.sourceId = entity.source;
@@ -37,6 +38,15 @@ export function creatureEntityToModelConverter(entity: CreatureEntity): Creature
     model.legendaryActions = buildTraits(entity.legendary);
     model.legendaryCount = entity.legendaryActions ?? 3;
     model.spellcasting = buildSpellcasting(entity.spellcasting);
+    
+    if (entity.legendaryGroup) {
+        let legendaryGroup = legendaryGroups.filter(x => x.name === entity.legendaryGroup!.name)[0];
+        if (legendaryGroup !== null) {
+            model.lairActions = buildLairActions(legendaryGroup.lairActions);
+            model.regionalEffects = buildLairActions(legendaryGroup.regionalEffects);
+            model.mythicEncounter = buildLairActions(legendaryGroup.mythicEncounter);
+        }
+    }
 
     return model;
 };
@@ -230,4 +240,43 @@ function buildSpellcasting(entitySpellcasting: Spellcasting[]) : SpellcastingMod
         spells.push(model);
     });
     return spells;
+}
+
+function buildLairActions(lairActions: string[] | ComplexLegendaryGroupItem[]) : SpecialActionModel[] {
+    let specialActions: SpecialActionModel[] = [];
+
+    Object.keys(lairActions ?? []).forEach((key, index) => {
+        let specialAction: SpecialActionModel = new SpecialActionModel();
+
+        if (typeof lairActions[index] === 'string') {            
+            specialAction.type = 'entry';
+            specialAction.items = [lairActions[index] as string];
+            specialActions.push(specialAction);
+        } else {
+            let castLairActions = lairActions[index] as ComplexLegendaryGroupItem;
+
+            if (castLairActions.type === 'list') {
+                specialAction.type = 'list';
+
+                Object.keys(castLairActions.items ?? []).forEach((actionKey, actionIndex) => {
+                    if (typeof castLairActions.items[actionIndex] === 'string') {
+                        specialAction.items.push(castLairActions.items[actionIndex] as string)
+                    } else {
+                        let innerLairAction = castLairActions.items[actionIndex] as ComplexLegendaryGroupItem;
+                        specialAction.type = 'list';
+                        specialAction.items.push(`${innerLairAction.name}: ${innerLairAction.entry}`);
+                    }
+                });
+                specialActions.push(specialAction);
+            } else if (castLairActions.type === 'entries') {
+                let innerSpecialActions = buildLairActions(castLairActions.entries);
+                innerSpecialActions.forEach(x => { 
+                    if (x.type === 'entry') x.type = 'additional';
+                    specialActions.push(x); 
+                });
+            }
+        }
+    });
+    
+    return specialActions;
 }

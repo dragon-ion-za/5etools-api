@@ -83,6 +83,10 @@ export interface KnownSpells {
     spells: string[];
 }
 
+export interface LegendaryGroup {
+    name: string;
+}
+
 export interface CreatureEntity {
     name: string;
     _copy: Copy;
@@ -123,4 +127,5 @@ export interface CreatureEntity {
     immune: string[];
     conditionImmune: string[];
     spellcasting: Spellcasting[];
+    legendaryGroup: LegendaryGroup | null;
 }
