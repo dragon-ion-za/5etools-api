@@ -28,7 +28,7 @@ export class CreaturesController {
     }
     
     public static getCreatureImage = (req: any, res: any) => {
-        res.sendFile(`img/${req.params.sourceId}/${req.params.name}.png`, { root: path.join(__dirname, '../') });
+        res.sendFile(`img/${req.params.sourceId}/${req.params.name}.png`, { root: path.join(__dirname, '../../') });
     };
     
     private static buildOdataCreatureFilter(reqQuery: any) : (x: CreatureEntity) => any {
