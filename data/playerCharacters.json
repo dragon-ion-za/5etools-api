@@ -1,0 +1,51 @@
+{ "playerCharacters": [
+    {
+        "name": "Luc",
+        "size": [
+            "M"
+        ],
+        "level": 2,
+        "race": "Human",
+        "classes": [
+            {
+                "class": "Ranger",
+                "level": 2
+            }
+        ],
+        "profBonus": 2,
+        "hp": 18,
+        "speed": {
+            "walk": 30
+        },
+        "str": 16,
+        "dex": 18,
+        "con": 9,
+        "int": 16,
+        "wis": 8,
+        "cha": 16,
+        "skill": [
+            "animalHandling",
+            "athletics",
+            "nature",
+            "perception",
+            "survival"
+        ],
+        "save": [
+            "str",
+            "dex"
+        ],
+        "passive": 11,
+        "languages": [
+            "Common",
+            "Orc"
+        ],
+        "trait": [
+            
+        ],
+        "action": [
+            
+        ],
+        "equipment": [],
+        "inventory": []
+    }
+]}
