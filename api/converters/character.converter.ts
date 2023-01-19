@@ -3,7 +3,7 @@ import { CharacterModel, ClassModel } from "../models/character.model";
 import { convertSizeToEnum, convertToFlyingSpeed, buildSpeedConditions, buildResistances, buildImmunities, buildTraits, buildSpellcasting } from "./sharedConverters";
 
 export function characterEntityToModelConverter(entity: CharacterEntity): CharacterModel {
-    let model: CharacterModel = new CharacterModel(entity.name);
+    let model: CharacterModel = new CharacterModel(entity.id, entity.name);
 
     model.size = convertSizeToEnum(entity.size);
     model.level = entity.level;

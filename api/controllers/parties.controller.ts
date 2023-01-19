@@ -39,8 +39,8 @@ const expandPartyMembers = (characters: string[]) : CharacterModel[] => {
 
     let jsonCharacters = readFile(`../data/playerCharacters.json`);
 
-    characters.forEach((characterName) => {
-        let foundCharacter: CharacterEntity = jsonCharacters.playerCharacters.filter((x: CharacterEntity) => x.name == characterName)[0];
+    characters.forEach((characterId) => {
+        let foundCharacter: CharacterEntity = jsonCharacters.playerCharacters.filter((x: CharacterEntity) => x.id == characterId)[0];
 
         if (foundCharacter) {
             model.push(characterEntityToModelConverter(foundCharacter))

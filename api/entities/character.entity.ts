@@ -6,6 +6,7 @@ export interface Class {
 }
 
 export interface CharacterEntity {
+    id: string;
     name: string;
     size: string[];
     level: number;

@@ -11,6 +11,7 @@ export class ClassModel {
 }
 
 export class CharacterModel {
+    id: string;
     name: string;
     size: CreatureSizes = CreatureSizes.Unknown;
     level: number = 0;
@@ -42,7 +43,8 @@ export class CharacterModel {
     reactions: CreatureTraitModel[] = [];
     spellcasting: SpellcastingModel[] = [];
 
-    constructor (name: string) {
+    constructor (id: string, name: string) {
+        this.id = id;
         this.name = name;
     }
 }
