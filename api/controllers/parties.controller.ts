@@ -1,9 +1,12 @@
+const path = require('path');
+
 import { characterEntityToModelConverter } from "../converters/character.converter";
+import { readFile } from "../services/readFile.service";
+
 import { CharacterEntity } from "../entities/character.entity";
 import { CharacterModel } from "../models/character.model";
 import ExpandedPartyModel from "../models/expandedParty.model";
 import PartyModel from "../models/party.model";
-import { readFile } from "../services/readFile.service";
 
 export class PartiesController { 
     public static getParties = (req: any, res: any) => {
@@ -24,6 +27,10 @@ export class PartiesController {
         let expandedParty: ExpandedPartyModel = new ExpandedPartyModel(foundParty.name, expandPartyMembers(foundParty.characters));
 
         res.send(expandedParty);
+    };
+
+    public static getCharacterImage = (req: any, res: any) => {
+        res.sendFile(`img/playerCharacters/${req.params.name}.png`, { root: path.join(__dirname, '../../') });
     };
 }
 

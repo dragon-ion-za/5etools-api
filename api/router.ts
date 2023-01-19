@@ -14,3 +14,4 @@ router.get('/adventures/:id', AdventuresController.getAdventureById);
 
 router.get('/parties', PartiesController.getParties);
 router.get('/parties/:name', PartiesController.getPartyByName);
+router.get('/parties/characterimage/:name', PartiesController.getCharacterImage);

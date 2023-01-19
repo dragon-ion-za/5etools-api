@@ -47,5 +47,206 @@
         ],
         "equipment": [],
         "inventory": []
+    },
+    {
+        "name": "Aranea",
+        "size": [
+            "M"
+        ],
+        "level": 2,
+        "race": "Dark Elf",
+        "classes": [
+            {
+                "class": "Ranger",
+                "level": 2
+            }
+        ],
+        "profBonus": 2,
+        "hp": 23,
+        "speed": {
+            "walk": 30
+        },
+        "str": 12,
+        "dex": 17,
+        "con": 13,
+        "int": 8,
+        "wis": 14,
+        "cha": 11,
+        "skill": [
+            "animalHandling",
+            "deception",
+            "nature",
+            "perception",
+            "stealth",
+            "survival"
+        ],
+        "save": [
+            "str",
+            "dex"
+        ],
+        "passive": 14,
+        "languages": [
+            "Common",
+            "Elvish"
+        ],
+        "trait": [
+            
+        ],
+        "action": [
+            
+        ],
+        "equipment": [],
+        "inventory": []
+    },
+    {
+        "name": "Icycle",
+        "size": [
+            "S"
+        ],
+        "level": 2,
+        "race": "Forest Gnome",
+        "classes": [
+            {
+                "class": "Wizard",
+                "level": 2
+            }
+        ],
+        "profBonus": 2,
+        "hp": 14,
+        "speed": {
+            "walk": 25
+        },
+        "str": 8,
+        "dex": 14,
+        "con": 14,
+        "int": 17,
+        "wis": 12,
+        "cha": 10,
+        "skill": [
+            "arcana",
+            "history",
+            "insight",
+            "investigation"
+        ],
+        "save": [
+            "int",
+            "wis"
+        ],
+        "passive": 11,
+        "languages": [
+            "Common",
+            "Draconic",
+            "Dwarvish",
+            "Gnomish"
+        ],
+        "trait": [
+            
+        ],
+        "action": [
+            
+        ],
+        "equipment": [],
+        "inventory": []
+    },
+    {
+        "name": "LandSkapie",
+        "size": [
+            "M"
+        ],
+        "level": 2,
+        "race": "Dark Elf",
+        "classes": [
+            {
+                "class": "Rogue",
+                "level": 2
+            }
+        ],
+        "profBonus": 2,
+        "hp": 16,
+        "speed": {
+            "walk": 30
+        },
+        "str": 8,
+        "dex": 17,
+        "con": 14,
+        "int": 10,
+        "wis": 12,
+        "cha": 14,
+        "skill": [
+            "acrobatics",
+            "deception",
+            "perception",
+            "performance",
+            "persuasion",
+            "sleightofhand",
+            "stealth"
+        ],
+        "save": [
+            "int",
+            "dex"
+        ],
+        "passive": 13,
+        "languages": [
+            "Common",
+            "Elvish",
+            "Thieves' Cant"
+        ],
+        "trait": [
+            
+        ],
+        "action": [
+            
+        ],
+        "equipment": [],
+        "inventory": []
+    },
+    {
+        "name": "Scarface",
+        "size": [
+            "M"
+        ],
+        "level": 2,
+        "race": "Dragonborn",
+        "classes": [
+            {
+                "class": "Paladin",
+                "level": 2
+            }
+        ],
+        "profBonus": 2,
+        "hp": 20,
+        "speed": {
+            "walk": 30
+        },
+        "str": 17,
+        "dex": 8,
+        "con": 13,
+        "int": 10,
+        "wis": 12,
+        "cha": 15,
+        "skill": [
+            "athletics",
+            "history",
+            "intimidation",
+            "persuasion"
+        ],
+        "save": [
+            "wis",
+            "cha"
+        ],
+        "passive": 11,
+        "languages": [
+            "Common",
+            "Draconic",
+            "Goblin"
+        ],
+        "trait": [
+            
+        ],
+        "action": [
+            
+        ],
+        "equipment": [],
+        "inventory": []
     }
 ]}
