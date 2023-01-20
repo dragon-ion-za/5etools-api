@@ -9,7 +9,7 @@
         "race": "Human",
         "classes": [
             {
-                "class": "Ranger",
+                "name": "Ranger",
                 "level": 2
             }
         ],
@@ -51,7 +51,8 @@
             "Longbow",
             "Quarterstaff",
             "Scimitar",
-            "Clothing, cold weather"
+            "Clothing, cold weather",
+            "Snowshoes"
         ],
         "inventory": []
     },
@@ -65,7 +66,7 @@
         "race": "Dark Elf",
         "classes": [
             {
-                "class": "Ranger",
+                "name": "Ranger",
                 "level": 2
             }
         ],
@@ -103,7 +104,14 @@
         "action": [
             
         ],
-        "equipment": [],
+        "equipment": [
+            "Dagger",
+            "Leather Armor",
+            "Longbow",
+            "Spear",
+            "Clothing, cold weather",
+            "Snowshoes"
+        ],
         "inventory": []
     },
     {
@@ -116,7 +124,7 @@
         "race": "Forest Gnome",
         "classes": [
             {
-                "class": "Wizard",
+                "name": "Wizard",
                 "level": 2
             }
         ],
@@ -154,7 +162,13 @@
         "action": [
             
         ],
-        "equipment": [],
+        "equipment": [
+            "Clothing, common",
+            "Clothing, cold weather",
+            "Dagger",
+            "Spellbook",
+            "Snowshoes"
+        ],
         "inventory": []
     },
     {
@@ -167,7 +181,7 @@
         "race": "Dark Elf",
         "classes": [
             {
-                "class": "Rogue",
+                "name": "Rogue",
                 "level": 2
             }
         ],
@@ -207,7 +221,12 @@
         "action": [
             
         ],
-        "equipment": [],
+        "equipment": [
+            "Light Crossbow",
+            "Studded Leather Armor",
+            "Clothing, cold weather",
+            "Snowshoes"
+        ],
         "inventory": []
     },
     {
@@ -220,7 +239,7 @@
         "race": "Dragonborn",
         "classes": [
             {
-                "class": "Paladin",
+                "name": "Paladin",
                 "level": 2
             }
         ],
@@ -257,7 +276,14 @@
         "action": [
             
         ],
-        "equipment": [],
+        "equipment": [
+            "Orc Stone",
+            "Chain Mail",
+            "Flail",
+            "Shield",
+            "Clothing, cold weather",
+            "Snowshoes"
+        ],
         "inventory": []
     }
 ]}
