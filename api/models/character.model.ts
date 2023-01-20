@@ -1,4 +1,5 @@
-import { CreatureSizes, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, SpecialActionModel } from "./sharedModels";
+import { ItemModel } from "./item.model";
+import { CreatureSizes, ResistanceModel, CreatureTraitModel, SpellcastingModel } from "./sharedModels";
 
 export class ClassModel {
     name: string;
@@ -42,6 +43,7 @@ export class CharacterModel {
     actions: CreatureTraitModel[] = [];
     reactions: CreatureTraitModel[] = [];
     spellcasting: SpellcastingModel[] = [];
+    equipment: ItemModel[] = [];
 
     constructor (id: string, name: string) {
         this.id = id;

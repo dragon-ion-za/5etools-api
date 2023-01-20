@@ -32,4 +32,5 @@ export interface CharacterEntity {
     immune: string[];
     conditionImmune: string[];
     spellcasting: Spellcasting[];
+    equipment: string[];
 }
