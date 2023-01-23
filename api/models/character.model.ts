@@ -1,15 +1,25 @@
-import { CreatureSizes, ArmourClassModel, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, SpecialActionModel } from "./sharedModels";
+import { ItemModel } from "./item.model";
+import { CreatureSizes, ResistanceModel, CreatureTraitModel, SpellcastingModel } from "./sharedModels";
 
-export class CreatureModel {
+export class ClassModel {
     name: string;
-    sourceId: string = '';
+    level: number;
+
+    constructor(name: string, level: number) {
+        this.name = name;
+        this.level = level;
+    }
+}
+
+export class CharacterModel {
+    id: string;
+    name: string;
     size: CreatureSizes = CreatureSizes.Unknown;
-    type: string = '';
-    alignment: string[] = [];
-    armourClass: ArmourClassModel | null = null;
-    hitpointAverage: number = 0;
-    hitpointFormula: string = '';
-    hitpointSpecial: string = '';
+    level: number = 0;
+    race: string = '';
+    classes: ClassModel[] = [];
+    hitpointMaximum: number = 0;
+    proficiencyBonus: number = 0;
     walkingSpeed: number = 0;
     climbingSpeed: number = 0;
     burrowingSpeed: number = 0;
@@ -23,25 +33,21 @@ export class CreatureModel {
     attributeInt: number = 0;
     attributeWis: number = 0;
     attributeCha: number = 0;
-    skillModifiers: SkillModifierModel[] = [];
+    skillProficiencies: string[] = [];
+    savingThrowProficiencies: string[] = [];
     passivePerception: number = 0;
     resistances: ResistanceModel[] = [];
     immunities: ResistanceModel[] = [];
     languages: string[] = [];
-    challengeRating: number = 0;
     traits: CreatureTraitModel[] = [];
     actions: CreatureTraitModel[] = [];
     reactions: CreatureTraitModel[] = [];
-    legendaryActions: CreatureTraitModel[] = [];
-    legendaryCount: number = 3;
     spellcasting: SpellcastingModel[] = [];
-    lairActions: SpecialActionModel[] = [];
-    regionalEffects: SpecialActionModel[] = [];
-    mythicEncounter: SpecialActionModel[] = [];
+    equipment: ItemModel[] = [];
     senses: string[] = [];
-    savingThrows: SkillModifierModel[] = [];
 
-    constructor (name: string) {
+    constructor (id: string, name: string) {
+        this.id = id;
         this.name = name;
     }
 }
