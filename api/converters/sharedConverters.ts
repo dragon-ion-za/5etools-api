@@ -1,5 +1,5 @@
 import { ComplexLegendaryGroupItem } from "../entities/legendary-group.entity";
-import { Ac, ComplexSpeed, Speed, ComplexResist, ComplexImmunity, Trait, Spellcasting } from "../entities/sharedEntities";
+import { Ac, ComplexSpeed, Speed, ComplexResist, ComplexImmunity, Trait, Spellcasting, Save } from "../entities/sharedEntities";
 import { CreatureSizes, ArmourClassModel, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, KnownSpellsModel, SpellTypes, SpecialActionModel } from "../models/sharedModels";
 
 export function convertSizeToEnum(entitySize: string[]) : CreatureSizes {
@@ -230,4 +230,19 @@ export function buildLairActions(lairActions: string[] | ComplexLegendaryGroupIt
     });
     
     return specialActions;
+}
+
+export function builsSavingThrows(saves: Save | null): SkillModifierModel[] {
+    let model: SkillModifierModel[] = [];
+
+    if (saves) {
+        if (saves.str) model.push(new SkillModifierModel("str", parseInt(saves.str)));
+        if (saves.dex) model.push(new SkillModifierModel("dex", parseInt(saves.dex)));
+        if (saves.con) model.push(new SkillModifierModel("con", parseInt(saves.con)));
+        if (saves.int) model.push(new SkillModifierModel("int", parseInt(saves.int)));
+        if (saves.wis) model.push(new SkillModifierModel("wis", parseInt(saves.wis)));
+        if (saves.cha) model.push(new SkillModifierModel("cha", parseInt(saves.cha)));
+    }
+
+    return model;
 }

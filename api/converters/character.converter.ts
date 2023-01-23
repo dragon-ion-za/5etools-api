@@ -46,12 +46,13 @@ export function characterEntityToModelConverter(entity: CharacterEntity, allItem
     model.passivePerception = entity.passive;
     model.resistances = buildResistances(entity.resist);
     model.immunities = buildImmunities(entity.immune, entity.conditionImmune);
-    model.languages = entity.languages;
+    model.languages = entity.languages ?? [];
     model.traits = buildTraits(entity.trait);
     model.actions = buildTraits(entity.action);
     model.reactions = buildTraits(entity.reaction);
     model.spellcasting = buildSpellcasting(entity.spellcasting);
     model.equipment = buildEquipment(entity.equipment, allItems);
+    model.senses = entity.senses ?? [];
 
     return model;
 };

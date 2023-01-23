@@ -44,6 +44,7 @@ export class CharacterModel {
     reactions: CreatureTraitModel[] = [];
     spellcasting: SpellcastingModel[] = [];
     equipment: ItemModel[] = [];
+    senses: string[] = [];
 
     constructor (id: string, name: string) {
         this.id = id;

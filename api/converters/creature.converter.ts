@@ -2,7 +2,7 @@ import { CreatureEntity } from "../entities/creature.entity";
 import { LegendaryGroupEntity } from "../entities/legendary-group.entity";
 import { Type } from "../entities/sharedEntities";
 import { CreatureModel } from "../models/creature.model";
-import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions } from "./sharedConverters";
+import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions, builsSavingThrows } from "./sharedConverters";
 
 export function creatureEntityToModelConverter(entity: CreatureEntity, legendaryGroups: LegendaryGroupEntity[]): CreatureModel {
     let model: CreatureModel = new CreatureModel(entity.name);
@@ -32,7 +32,7 @@ export function creatureEntityToModelConverter(entity: CreatureEntity, legendary
     model.passivePerception = entity.passive;
     model.resistances = buildResistances(entity.resist);
     model.immunities = buildImmunities(entity.immune, entity.conditionImmune);
-    model.languages = entity.languages;
+    model.languages = entity.languages ?? [];
     model.challengeRating = Number.parseInt(entity.cr);
     model.traits = buildTraits(entity.trait);
     model.actions = buildTraits(entity.action);
@@ -40,6 +40,8 @@ export function creatureEntityToModelConverter(entity: CreatureEntity, legendary
     model.legendaryActions = buildTraits(entity.legendary);
     model.legendaryCount = entity.legendaryActions ?? 3;
     model.spellcasting = buildSpellcasting(entity.spellcasting);
+    model.senses = entity.senses ?? [];
+    model.savingThrows = builsSavingThrows(entity.save);
     
     if (entity.legendaryGroup) {
         let legendaryGroup = legendaryGroups.filter(x => x.name === entity.legendaryGroup!.name)[0];

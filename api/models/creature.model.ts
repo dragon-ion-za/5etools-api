@@ -38,6 +38,8 @@ export class CreatureModel {
     lairActions: SpecialActionModel[] = [];
     regionalEffects: SpecialActionModel[] = [];
     mythicEncounter: SpecialActionModel[] = [];
+    senses: string[] = [];
+    savingThrows: SkillModifierModel[] = [];
 
     constructor (name: string) {
         this.name = name;

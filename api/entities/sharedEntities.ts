@@ -86,3 +86,12 @@ export interface KnownSpells {
 export interface LegendaryGroup {
     name: string;
 }
+
+export interface Save {
+    str: string;
+    dex: string;
+    con: string;
+    wis: string;
+    int: string;
+    cha: string;
+}
