@@ -1,5 +1,5 @@
 import { ComplexLegendaryGroupItem } from "../entities/legendary-group.entity";
-import { Ac, ComplexSpeed, Speed, ComplexResist, ComplexImmunity, Trait, Spellcasting, Save } from "../entities/sharedEntities";
+import { Ac, ComplexSpeed, Speed, ComplexResist, ComplexImmunity, Trait, Spellcasting, Save, ComplexTrait } from "../entities/sharedEntities";
 import { CreatureSizes, ArmourClassModel, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, KnownSpellsModel, SpellTypes, SpecialActionModel } from "../models/sharedModels";
 
 export function convertSizeToEnum(entitySize: string[]) : CreatureSizes {
@@ -130,7 +130,28 @@ export function buildImmunities(entityImmune: any, entityConditionImmune: any): 
 export function buildTraits(entityTraits: Trait[]) : CreatureTraitModel[] {
     let traits: CreatureTraitModel[] = [];
 
-    entityTraits?.forEach(x => traits.push(new CreatureTraitModel(x.name, x.entries)));
+    entityTraits?.forEach(x => { 
+        let trait: CreatureTraitModel = new CreatureTraitModel(x.name, []);
+
+        Object.keys(x.entries ?? []).forEach((key, index) => {    
+            if (typeof x.entries[index] === 'string') {
+                trait.entries.push(x.entries[index] as string);
+            } else {
+                let castTrait = x.entries[index] as ComplexTrait;
+
+                Object.keys(castTrait.items ?? []).forEach((innerKey, innerIndex) => {
+                    if (typeof castTrait.items[index] === 'string') {
+                        trait.entries.push(castTrait.items[index] as string);
+                    } else {
+                        let castTraitItem = castTrait.items[index] as ComplexTrait;
+                        trait.entries.push(`${castTraitItem.name}: ${castTraitItem.entry}`);
+                    }
+                });
+            }
+        });
+
+        traits.push(trait); 
+    });
 
     return traits;
 }
