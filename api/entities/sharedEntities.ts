@@ -35,7 +35,15 @@ export interface ComplexSpeed {
 
 export interface Trait {
     name: string;
-    entries: string[];
+    entries: string[] | ComplexTrait[];
+}
+
+export interface ComplexTrait {
+    name: string;
+    type: string;
+    style: string;
+    entry: string;
+    items: string[] | ComplexTrait[];
 }
 
 export interface SoundClip {
