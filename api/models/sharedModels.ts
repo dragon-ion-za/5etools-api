@@ -75,5 +75,11 @@ export class KnownSpellsModel {
 
 export class SpecialActionModel {
     type: string = '';
-    items: string[] = [];
+    name: string = '';
+    items: (string | CreatureTraitModel)[] = [];
+}
+
+export class ActionGroupModel {
+    name: string = '';
+    items: SpecialActionModel[] = [];
 }
