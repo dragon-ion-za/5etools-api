@@ -1,6 +1,6 @@
 import { ComplexLegendaryGroupItem } from "../entities/legendary-group.entity";
 import { Ac, ComplexSpeed, Speed, ComplexResist, ComplexImmunity, Trait, Spellcasting, Save, ComplexTrait } from "../entities/sharedEntities";
-import { CreatureSizes, ArmourClassModel, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, KnownSpellsModel, SpellTypes, SpecialActionModel } from "../models/sharedModels";
+import { CreatureSizes, ArmourClassModel, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, KnownSpellsModel, SpellTypes, SpecialActionModel, ActionGroupModel } from "../models/sharedModels";
 
 export function convertSizeToEnum(entitySize: string[]) : CreatureSizes {
     switch (entitySize[0].toLowerCase()) {
@@ -140,10 +140,10 @@ export function buildTraits(entityTraits: Trait[]) : CreatureTraitModel[] {
                 let castTrait = x.entries[index] as ComplexTrait;
 
                 Object.keys(castTrait.items ?? []).forEach((innerKey, innerIndex) => {
-                    if (typeof castTrait.items[index] === 'string') {
-                        trait.entries.push(castTrait.items[index] as string);
+                    if (typeof castTrait.items[innerIndex] === 'string') {
+                        trait.entries.push(castTrait.items[innerIndex] as string);
                     } else {
-                        let castTraitItem = castTrait.items[index] as ComplexTrait;
+                        let castTraitItem = castTrait.items[innerIndex] as ComplexTrait;
                         trait.entries.push(`${castTraitItem.name}: ${castTraitItem.entry}`);
                     }
                 });
@@ -232,7 +232,7 @@ export function buildLairActions(lairActions: string[] | ComplexLegendaryGroupIt
 
                 Object.keys(castLairActions.items ?? []).forEach((actionKey, actionIndex) => {
                     if (typeof castLairActions.items[actionIndex] === 'string') {
-                        specialAction.items.push(castLairActions.items[actionIndex] as string)
+                        specialAction.items.push(castLairActions.items[actionIndex])
                     } else {
                         let innerLairAction = castLairActions.items[actionIndex] as ComplexLegendaryGroupItem;
                         specialAction.type = 'list';
@@ -264,6 +264,56 @@ export function builsSavingThrows(saves: Save | null): SkillModifierModel[] {
         if (saves.wis) model.push(new SkillModifierModel("wis", parseInt(saves.wis)));
         if (saves.cha) model.push(new SkillModifierModel("cha", parseInt(saves.cha)));
     }
+
+    return model;
+}
+
+export function buildActionGroup(groupName: string, actions: Trait[]): ActionGroupModel {
+    let model: ActionGroupModel = new ActionGroupModel();
+    model.name = groupName;
+
+    actions.forEach(action => { 
+        let actionItems: (string | SpecialActionModel)[] = [];
+
+        Object.keys(action.entries ?? []).forEach((key, index) => {
+            if (typeof action.entries[index] === 'string') {            
+                actionItems.push(action.entries[index] as string);
+            } else {
+                let castTrait = action.entries[index] as ComplexTrait;
+                let complexAction: SpecialActionModel = new SpecialActionModel();
+                complexAction.type = castTrait.type;
+
+                Object.keys(castTrait.items ?? []).forEach((innerKey, innerIndex) => {
+                    if (typeof castTrait.items[innerIndex] === 'string') {
+                        complexAction.type = 'entry';
+                        complexAction.items.push(castTrait.items[innerIndex] as string);
+                    } else {
+                        let castInnerTrait = castTrait.items[innerIndex] as ComplexTrait;
+                        
+
+                        if (castInnerTrait.type === 'item') {
+                            let entries: string[] = [];
+                            entries.push(castInnerTrait.entry);
+
+                            complexAction.items.push({
+                                type: 'list-item',
+                                name: castInnerTrait.name,
+                                items: entries
+                            });
+                        }
+                    }
+                });
+
+                actionItems.push(complexAction);
+            }
+        });
+
+        model.items.push({
+            type: 'entry',
+            name: action.name,
+            items: actionItems
+        });
+     });
 
     return model;
 }

@@ -2,7 +2,7 @@ import { CreatureEntity } from "../entities/creature.entity";
 import { LegendaryGroupEntity } from "../entities/legendary-group.entity";
 import { Type } from "../entities/sharedEntities";
 import { CreatureModel } from "../models/creature.model";
-import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions, builsSavingThrows } from "./sharedConverters";
+import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions, builsSavingThrows, buildActionGroup } from "./sharedConverters";
 
 export function creatureEntityToModelConverter(entity: CreatureEntity, legendaryGroups: LegendaryGroupEntity[]): CreatureModel {
     let model: CreatureModel = new CreatureModel(entity.name);
@@ -42,6 +42,11 @@ export function creatureEntityToModelConverter(entity: CreatureEntity, legendary
     model.spellcasting = buildSpellcasting(entity.spellcasting);
     model.senses = entity.senses ?? [];
     model.savingThrows = builsSavingThrows(entity.save);
+
+    model.actionGroups.push(buildActionGroup('Traits', entity.trait ?? []));
+    model.actionGroups.push(buildActionGroup('Actions', entity.action ?? []));
+    model.actionGroups.push(buildActionGroup('Reactions', entity.reaction ?? []));
+    model.actionGroups.push(buildActionGroup('Legendary Actions', entity.legendary ?? []));
     
     if (entity.legendaryGroup) {
         let legendaryGroup = legendaryGroups.filter(x => x.name === entity.legendaryGroup!.name)[0];
