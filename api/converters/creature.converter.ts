@@ -2,7 +2,10 @@ import { CreatureEntity } from "../entities/creature.entity";
 import { LegendaryGroupEntity } from "../entities/legendary-group.entity";
 import { Type } from "../entities/sharedEntities";
 import { CreatureModel } from "../models/creature.model";
-import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions, builsSavingThrows, buildActionGroup } from "./sharedConverters";
+import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, 
+    buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions, builsSavingThrows, buildActionGroupActionsFromTraits, 
+    buildActionGroupActionsFromSpellcasting, 
+    buildActionGroupActionsFromLegendaryGroupActions} from "./sharedConverters";
 
 export function creatureEntityToModelConverter(entity: CreatureEntity, legendaryGroups: LegendaryGroupEntity[]): CreatureModel {
     let model: CreatureModel = new CreatureModel(entity.name);
@@ -43,10 +46,16 @@ export function creatureEntityToModelConverter(entity: CreatureEntity, legendary
     model.senses = entity.senses ?? [];
     model.savingThrows = builsSavingThrows(entity.save);
 
-    model.actionGroups.push(buildActionGroup('Traits', entity.trait ?? []));
-    model.actionGroups.push(buildActionGroup('Actions', entity.action ?? []));
-    model.actionGroups.push(buildActionGroup('Reactions', entity.reaction ?? []));
-    model.actionGroups.push(buildActionGroup('Legendary Actions', entity.legendary ?? []));
+    model.actionGroups.push(buildActionGroupActionsFromTraits('Traits', entity.trait ?? []));
+    model.actionGroups.push(buildActionGroupActionsFromTraits('Actions', entity.action ?? []));
+    model.actionGroups.push(buildActionGroupActionsFromTraits('Reactions', entity.reaction ?? []));
+    model.actionGroups.push(buildActionGroupActionsFromTraits('Legendary Actions', entity.legendary ?? []));
+
+    if (entity.spellcasting && entity.spellcasting.length > 0) {
+        model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Spellcasting', entity.spellcasting.filter(x => x.name === 'Spellcasting')[0]));
+        model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Innate Spellcasting', entity.spellcasting.filter(x => x.name === 'Innate Spellcasting')[0]));
+    }
+    
     
     if (entity.legendaryGroup) {
         let legendaryGroup = legendaryGroups.filter(x => x.name === entity.legendaryGroup!.name)[0];
@@ -54,6 +63,10 @@ export function creatureEntityToModelConverter(entity: CreatureEntity, legendary
             model.lairActions = buildLairActions(legendaryGroup.lairActions);
             model.regionalEffects = buildLairActions(legendaryGroup.regionalEffects);
             model.mythicEncounter = buildLairActions(legendaryGroup.mythicEncounter);
+
+            model.actionGroups.push(buildActionGroupActionsFromLegendaryGroupActions('Lair Actions', legendaryGroup.lairActions));
+            model.actionGroups.push(buildActionGroupActionsFromLegendaryGroupActions('Regional Effects', legendaryGroup.regionalEffects));
+            model.actionGroups.push(buildActionGroupActionsFromLegendaryGroupActions('Mythic Encounter', legendaryGroup.mythicEncounter));
         }
     }
 
