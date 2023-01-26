@@ -296,7 +296,7 @@ export function buildActionGroupActionsFromTraits(groupName: string, actions: Tr
                             entries.push(castInnerTrait.entry);
 
                             complexAction.items.push({
-                                type: 'list-item',
+                                type: 'list-entry',
                                 name: castInnerTrait.name,
                                 items: entries
                             });
@@ -325,20 +325,14 @@ export function buildActionGroupActionsFromSpellcasting(groupName: string, spell
     model.items.push({name: 'Spellcasting Ability', type: 'ability', items: [spellcasting.ability]})
     model.items.push({name: '', type: 'entry', items: spellcasting.headerEntries.concat(spellcasting.footerEntries ?? [])});
 
+    let spellsModel: SpecialActionModel = new SpecialActionModel();
+    spellsModel.type = 'list';
+
     if (spellcasting.will && spellcasting.will.length > 0) {
-        let atWillModel: SpecialActionModel = new SpecialActionModel();
-        atWillModel.name = 'At Will';
-        atWillModel.type = 'list';
-        atWillModel.items = spellcasting.will;
-        model.items.push(atWillModel);
+        spellsModel.items.push({name: 'At Will', type: 'list-item', items: spellcasting.will});
     }
 
     if (spellcasting.daily !== undefined) {
-        let dailyModel: SpecialActionModel = new SpecialActionModel();
-        dailyModel.name = 'Daily';
-        dailyModel.type = 'list';
-
-
         for (const key in spellcasting.daily){
             let limitedModel: SpecialActionModel = new SpecialActionModel();
             limitedModel.type = 'list-item';
@@ -359,28 +353,22 @@ export function buildActionGroupActionsFromSpellcasting(groupName: string, spell
             limitedModel.name = `Daily (${resourceLimit}${resourceLimitType === 'e' ? ' each' : ''})`;
             spellcasting.daily[key].forEach(x => limitedModel.items.push(x));
             
-            dailyModel.items.push(limitedModel);
+            spellsModel.items.push(limitedModel);
         }
-
-        model.items.push(dailyModel);
     }
 
     if (spellcasting.spells !== undefined) {
-        let spellsModel: SpecialActionModel = new SpecialActionModel();
-        spellsModel.type = 'list';
-        spellsModel.name = 'Known Spells';
-
         for (const key in spellcasting.spells){
             let knownModel: SpecialActionModel = new SpecialActionModel();
             knownModel.type = 'list-item';
-            knownModel.name = `Level ${key} (${(spellcasting.spells[key].slots ?? 0)})`;
+            knownModel.name = key === '0' ? 'Cantrips' : `Level ${key} (${(spellcasting.spells[key].slots ?? 0)})`;
             spellcasting.spells[key].spells.forEach(x => knownModel.items.push(x));
             
             spellsModel.items.push(knownModel);
         }
-
-        model.items.push(spellsModel);
     }
+
+    model.items.push(spellsModel);
 
     return model;
 }
@@ -417,7 +405,7 @@ export function buildActionsFromLegendaryGroupAction(legendaryAction: (string | 
                     let innerLairAction = castLairActions.items[actionIndex] as ComplexLegendaryGroupItem;
                     specialAction.items.push({
                         name: innerLairAction.name,
-                        type: 'list-item',
+                        type: 'list-entry',
                         items: [innerLairAction.entry]
                     });
                 }

@@ -1,6 +1,6 @@
 import { CreatureEntity } from "../entities/creature.entity";
 import { LegendaryGroupEntity } from "../entities/legendary-group.entity";
-import { Type } from "../entities/sharedEntities";
+import { Spellcasting, Type } from "../entities/sharedEntities";
 import { CreatureModel } from "../models/creature.model";
 import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, 
     buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions, builsSavingThrows, buildActionGroupActionsFromTraits, 
@@ -52,8 +52,11 @@ export function creatureEntityToModelConverter(entity: CreatureEntity, legendary
     model.actionGroups.push(buildActionGroupActionsFromTraits('Legendary Actions', entity.legendary ?? []));
 
     if (entity.spellcasting && entity.spellcasting.length > 0) {
-        model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Spellcasting', entity.spellcasting.filter(x => x.name === 'Spellcasting')[0]));
-        model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Innate Spellcasting', entity.spellcasting.filter(x => x.name === 'Innate Spellcasting')[0]));
+        let spellcasting: Spellcasting = entity.spellcasting.filter(x => x.name === 'Spellcasting')[0];
+        if (spellcasting) model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Spellcasting',spellcasting ));
+
+        spellcasting = entity.spellcasting.filter(x => x.name === 'Innate Spellcasting')[0];
+        if (spellcasting) model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Innate Spellcasting', spellcasting));
     }
     
     
