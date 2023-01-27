@@ -1,5 +1,5 @@
 import { ItemModel } from "./item.model";
-import { CreatureSizes, ResistanceModel, CreatureTraitModel, SpellcastingModel } from "./sharedModels";
+import { CreatureSizes, ResistanceModel, CreatureTraitModel, SpellcastingModel, ActionGroupModel } from "./sharedModels";
 
 export class ClassModel {
     name: string;
@@ -45,6 +45,7 @@ export class CharacterModel {
     spellcasting: SpellcastingModel[] = [];
     equipment: ItemModel[] = [];
     senses: string[] = [];
+    actionGroups: ActionGroupModel[] = [];
 
     constructor (id: string, name: string) {
         this.id = id;

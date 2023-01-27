@@ -3,7 +3,7 @@ import { ItemEntity } from "../entities/item.entity";
 import { CharacterModel, ClassModel } from "../models/character.model";
 import { ItemModel } from "../models/item.model";
 import { itemEntityToModelConverter } from "./item.converter";
-import { convertSizeToEnum, convertToFlyingSpeed, buildSpeedConditions, buildResistances, buildImmunities, buildTraits, buildSpellcasting } from "./sharedConverters";
+import { convertSizeToEnum, convertToFlyingSpeed, buildSpeedConditions, buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildActionGroupActionsFromTraits, buildActionGroupActionsFromSpellcasting } from "./sharedConverters";
 
 function buildEquipment(equipment: string[], allItems: ItemEntity[]): ItemModel[] {
     let equippedItems: ItemModel[] = [];
@@ -53,6 +53,15 @@ export function characterEntityToModelConverter(entity: CharacterEntity, allItem
     model.spellcasting = buildSpellcasting(entity.spellcasting);
     model.equipment = buildEquipment(entity.equipment, allItems);
     model.senses = entity.senses ?? [];
+
+    model.actionGroups.push(buildActionGroupActionsFromTraits('Traits', entity.trait ?? []));
+    model.actionGroups.push(buildActionGroupActionsFromTraits('Actions', entity.action ?? []));
+    model.actionGroups.push(buildActionGroupActionsFromTraits('Reactions', entity.reaction ?? []));
+
+    if (entity.spellcasting && entity.spellcasting.length > 0) {
+        model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Spellcasting', entity.spellcasting.filter(x => x.name === 'Spellcasting')[0]));
+        model.actionGroups.push(buildActionGroupActionsFromSpellcasting('Innate Spellcasting', entity.spellcasting.filter(x => x.name === 'Innate Spellcasting')[0]));
+    }
 
     return model;
 };

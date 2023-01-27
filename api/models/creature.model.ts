@@ -1,4 +1,4 @@
-import { CreatureSizes, ArmourClassModel, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, SpecialActionModel } from "./sharedModels";
+import { CreatureSizes, ArmourClassModel, SkillModifierModel, ResistanceModel, CreatureTraitModel, SpellcastingModel, SpecialActionModel, ActionGroupModel } from "./sharedModels";
 
 export class CreatureModel {
     name: string;
@@ -40,6 +40,7 @@ export class CreatureModel {
     mythicEncounter: SpecialActionModel[] = [];
     senses: string[] = [];
     savingThrows: SkillModifierModel[] = [];
+    actionGroups: ActionGroupModel[] = [];
 
     constructor (name: string) {
         this.name = name;
