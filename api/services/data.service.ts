@@ -18,10 +18,16 @@ export class DataService {
         console.log(`Successfully connected to database: ${db.databaseName} and collection: ${encounterCollection.collectionName}`);
     }
 
-    public static async saveEncounter(encounter: EncounterModel) {
+    public static async saveEncounter(encounter: EncounterModel) : Promise<string> {
         await this.connectToDb();
         encounter.id = uuid();
-        await this.collections.encounters?.insertOne(encounter);
+        let result = await this.collections.encounters?.insertOne(encounter);
+
+        if (result?.acknowledged) {
+            return encounter.id;
+        } else {
+            return '';
+        }
     }
 
     public static async getEncounters(): Promise<EncounterModel[]> {

@@ -3,13 +3,13 @@ import { DataService } from "../services/data.service"
 
 export class EncountersController { 
     public static saveEncounter = async (req: any, res: any) => {
-        await DataService.saveEncounter(req.body as EncounterModel);
+        let encounterId = await DataService.saveEncounter(req.body as EncounterModel);
 
-        res.send('OK');
+        res.send(encounterId);
     }
 
     public static getEncounters = async (req: any, res: any) => {
-        let encounters: EncounterModel[] = await DataService.getEncounters();
+        let encounters: EncounterModel[] = await (await DataService.getEncounters()).map(x => { return { name: x.name, id: x.id, creatures: [], selectedParty: '' } });
 
         res.send(encounters);
     }
