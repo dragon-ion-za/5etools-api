@@ -18,5 +18,6 @@ router.get('/parties/:name', PartiesController.getPartyByName);
 router.get('/parties/characterimage/:name', PartiesController.getCharacterImage);
 
 router.post('/encounters', EncountersController.saveEncounter);
+router.put('/encounters', EncountersController.updateEncounter);
 router.get('/encounters', EncountersController.getEncounters);
 router.get('/encounters/:id', EncountersController.getEncounterById);

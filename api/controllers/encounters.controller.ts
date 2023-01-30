@@ -8,6 +8,12 @@ export class EncountersController {
         res.send(encounterId);
     }
 
+    public static updateEncounter = async (req: any, res: any) => {
+        let encounterId = await DataService.updateEncounter(req.body as EncounterModel);
+
+        res.send(encounterId);
+    }
+
     public static getEncounters = async (req: any, res: any) => {
         let encounters: EncounterModel[] = await (await DataService.getEncounters()).map(x => { return { name: x.name, id: x.id, creatures: [], selectedParty: '' } });
 
