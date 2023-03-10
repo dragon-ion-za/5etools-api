@@ -329,13 +329,13 @@ export function buildActionGroupActionsFromSpellcasting(groupName: string, spell
     spellsModel.type = 'list';
 
     if (spellcasting.will && spellcasting.will.length > 0) {
-        spellsModel.items.push({name: 'At Will', type: 'list-item', items: spellcasting.will});
+        spellsModel.items.push({name: 'At Will', type: 'list-item-inline', items: spellcasting.will});
     }
 
     if (spellcasting.daily !== undefined) {
         for (const key in spellcasting.daily){
             let limitedModel: SpecialActionModel = new SpecialActionModel();
-            limitedModel.type = 'list-item';
+            limitedModel.type = 'list-item-inline';
 
             let matches = key.matchAll(/(\n?)(\w?)/g);
             let resourceLimit: string = '';
@@ -360,7 +360,7 @@ export function buildActionGroupActionsFromSpellcasting(groupName: string, spell
     if (spellcasting.spells !== undefined) {
         for (const key in spellcasting.spells){
             let knownModel: SpecialActionModel = new SpecialActionModel();
-            knownModel.type = 'list-item';
+            knownModel.type = 'list-item-inline';
             knownModel.name = key === '0' ? 'Cantrips' : `Level ${key} (${(spellcasting.spells[key].slots ?? 0)})`;
             spellcasting.spells[key].spells.forEach(x => knownModel.items.push(x));
             
