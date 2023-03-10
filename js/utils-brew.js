@@ -240,6 +240,8 @@ class BrewUtilShared {
 	}
 }
 
+globalThis.BrewUtilShared = BrewUtilShared;
+
 class _BrewUtil2Base {
 	_STORAGE_KEY_LEGACY;
 	_STORAGE_KEY_LEGACY_META;
@@ -938,6 +940,7 @@ class _BrewUtil2Base {
 		[UrlUtil.PG_CHAR_CREATION_OPTIONS]: ["charoption"],
 		[UrlUtil.PG_RECIPES]: ["recipe"],
 		[UrlUtil.PG_CLASS_SUBCLASS_FEATURES]: ["classFeature", "subclassFeature"],
+		[UrlUtil.PG_DECKS]: ["card", "deck"],
 	};
 
 	getPageProps ({page, isStrict = false, fallback = null} = {}) {

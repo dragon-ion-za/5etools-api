@@ -1,6 +1,20 @@
 "use strict";
 
 class PageFilterBestiary extends PageFilter {
+	static _NEUT_ALIGNS = ["NX", "NY"];
+	static MISC_FILTER_SPELLCASTER = "Spellcaster, ";
+	static _RE_SPELL_TAG = /{@spell ([^}]+)}/g;
+	static _WALKER = null;
+	static _BASIC_ENTRY_PROPS = [
+		"trait",
+		"action",
+		"bonus",
+		"reaction",
+		"legendary",
+		"mythic",
+	];
+	static _DRAGON_AGES = ["wyrmling", "young", "adult", "ancient", "greatwyrm", "aspect"];
+
 	// region static
 	static sortMonsters (a, b, o) {
 		if (o.sortBy === "count") return SortUtil.ascSort(a.data.count, b.data.count) || SortUtil.compareListNames(a, b);
@@ -303,8 +317,8 @@ class PageFilterBestiary extends PageFilter {
 		if (mon.basicRules) mon._fMisc.push("Basic Rules");
 		if (mon.tokenUrl || mon.hasToken) mon._fMisc.push("Has Token");
 		if (mon.mythic) mon._fMisc.push("Mythic");
-		if (mon.hasFluff) mon._fMisc.push("Has Info");
-		if (mon.hasFluffImages) mon._fMisc.push("Has Images");
+		if (mon.hasFluff || mon.fluff?.entries) mon._fMisc.push("Has Info");
+		if (mon.hasFluffImages || mon.fluff?.images) mon._fMisc.push("Has Images");
 		if (this._isReprinted({reprintedAs: mon.reprintedAs, tag: "creature", prop: "monster", page: UrlUtil.PG_BESTIARY})) mon._fMisc.push("Reprinted");
 		if (this._hasRecharge(mon)) mon._fMisc.push("Has Recharge");
 		if (mon._versionBase_isVersion) mon._fMisc.push("Is Variant");
@@ -500,19 +514,8 @@ class PageFilterBestiary extends PageFilter {
 		);
 	}
 }
-PageFilterBestiary._NEUT_ALIGNS = ["NX", "NY"];
-PageFilterBestiary.MISC_FILTER_SPELLCASTER = "Spellcaster, ";
-PageFilterBestiary._RE_SPELL_TAG = /{@spell ([^}]+)}/g;
-PageFilterBestiary._WALKER = null;
-PageFilterBestiary._BASIC_ENTRY_PROPS = [
-	"trait",
-	"action",
-	"bonus",
-	"reaction",
-	"legendary",
-	"mythic",
-];
-PageFilterBestiary._DRAGON_AGES = ["wyrmling", "young", "adult", "ancient", "greatwyrm", "aspect"];
+
+globalThis.PageFilterBestiary = PageFilterBestiary;
 
 class ModalFilterBestiary extends ModalFilter {
 	/**
@@ -599,8 +602,10 @@ class ModalFilterBestiary extends ModalFilter {
 	}
 }
 
+globalThis.ModalFilterBestiary = ModalFilterBestiary;
+
 class ListSyntaxBestiary extends ListUiUtil.ListSyntax {
-	static _INDEXABLE_PROPS = [
+	static _INDEXABLE_PROPS_ENTRIES = [
 		"trait",
 		"spellcasting",
 		"action",
@@ -618,10 +623,12 @@ class ListSyntaxBestiary extends ListUiUtil.ListSyntax {
 
 	_getSearchCacheStats (entity) {
 		const legGroup = DataUtil.monster.getMetaGroup(entity);
-		if (!legGroup && this.constructor._INDEXABLE_PROPS.every(it => !entity[it])) return "";
+		if (!legGroup && this.constructor._INDEXABLE_PROPS_ENTRIES.every(it => !entity[it])) return "";
 		const ptrOut = {_: ""};
-		this.constructor._INDEXABLE_PROPS.forEach(it => this._getSearchCache_handleEntryProp(entity, it, ptrOut));
+		this.constructor._INDEXABLE_PROPS_ENTRIES.forEach(it => this._getSearchCache_handleEntryProp(entity, it, ptrOut));
 		if (legGroup) this.constructor._INDEXABLE_PROPS_LEG_GROUP.forEach(it => this._getSearchCache_handleEntryProp(legGroup, it, ptrOut));
 		return ptrOut._;
 	}
 }
+
+globalThis.ListSyntaxBestiary = ListSyntaxBestiary;

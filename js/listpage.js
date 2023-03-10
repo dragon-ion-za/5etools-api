@@ -720,25 +720,37 @@ class SublistManager {
 	doSublistDeselectAll () { this._listSub.deselectAll(); }
 }
 
-class ListPageSettingsManager extends BaseComponent {
-	static _SETTINGS = [];
-	static _STORAGE_KEY = "listPageSettings";
+class ListPageStateManager extends BaseComponent {
+	static _STORAGE_KEY;
 
 	async pInit () {
-		const saved = await this._pLoadSettings();
+		const saved = await this._pGetPersistedState();
 		if (!saved) return;
 		this.setStateFrom(saved);
 	}
 
-	async _pLoadSettings () { return StorageUtil.pGetForPage(this.constructor._STORAGE_KEY); }
+	async _pGetPersistedState () {
+		return StorageUtil.pGetForPage(this.constructor._STORAGE_KEY);
+	}
 
-	async _pSaveSettings () {
+	async _pPersistState () {
 		await StorageUtil.pSetForPage(this.constructor._STORAGE_KEY, this.getSaveableState());
 	}
+
+	addHookBase (prop, hk) { return this._addHookBase(prop, hk); }
+	removeHookBase (prop, hk) { return this._removeHookBase(prop, hk); }
+}
+
+class ListPageSettingsManager extends ListPageStateManager {
+	static _STORAGE_KEY = "listPageSettings";
+
+	static _SETTINGS = [];
 
 	_getSettings () { return {}; }
 
 	bindBtnOpen ({btn}) {
+		if (!btn) return;
+
 		btn
 			.addEventListener(
 				"click",
@@ -746,7 +758,7 @@ class ListPageSettingsManager extends BaseComponent {
 					const $btnReset = $(`<button class="btn btn-default btn-xs" title="Reset"><span class="glyphicon glyphicon-refresh"></span></button>`)
 						.click(() => {
 							this._proxyAssignSimple("state", this._getDefaultState(), true);
-							this._pSaveSettings()
+							this._pPersistState()
 								.then(() => Hist.hashChange());
 						});
 
@@ -755,7 +767,7 @@ class ListPageSettingsManager extends BaseComponent {
 						isHeaderBorder: true,
 						title: "Settings",
 						cbClose: () => {
-							this._pSaveSettings()
+							this._pPersistState()
 								.then(() => Hist.hashChange());
 						},
 						$titleSplit: $btnReset,
@@ -768,6 +780,13 @@ class ListPageSettingsManager extends BaseComponent {
 									return $$`<label class="split-v-center stripe-even py-1">
 										<span>${setting.name}</span>
 										${ComponentUiUtil.$getCbBool(this, prop)}
+									</label>`;
+								}
+
+								case "enum": {
+									return $$`<label class="split-v-center stripe-even py-1">
+										<span>${setting.name}</span>
+										${ComponentUiUtil.$getSelEnum(this, prop, {values: setting.enumVals})}
 									</label>`;
 								}
 
@@ -785,6 +804,13 @@ class ListPageSettingsManager extends BaseComponent {
 	getValues () {
 		return MiscUtil.copyFast(this.__state);
 	}
+
+	async pSet (key, val) {
+		this._state[key] = val;
+		await this._pPersistState();
+	}
+
+	get (key) { return this._state[key]; }
 
 	_getDefaultState () {
 		return SettingsUtil.getDefaultSettings(this._getSettings());
@@ -854,11 +880,13 @@ class ListPage {
 		this._dataList = [];
 		this._ixData = 0;
 		this._bookView = null;
-		this._$pgContent = null;
 		this._bookViewToShow = null;
 		this._sublistManager = null;
 		this._btnsTabs = {};
 		this._lastRender = {};
+
+		this._$pgContent = null;
+		this._$wrpTabs = null;
 
 		this._contextMenuList = null;
 
@@ -876,7 +904,7 @@ class ListPage {
 	async pOnLoad () {
 		Hist.setListPage(this);
 
-		this._$pgContent = $(`#pagecontent`);
+		this._pOnLoad_findPageElements();
 
 		await Promise.all([
 			PrereleaseUtil.pInit(),
@@ -884,10 +912,7 @@ class ListPage {
 		]);
 		await ExcludeUtil.pInitialise();
 
-		if (this._compSettings) {
-			await this._compSettings.pInit();
-			this._compSettings.bindBtnOpen({btn: document.getElementById("btn-list-settings")});
-		}
+		await this._pOnLoad_pInitSettingsManager();
 
 		let data;
 		// For pages which can load data without filter state, load the data early
@@ -950,6 +975,18 @@ class ListPage {
 		await this._pOnLoad_pPostLoad();
 
 		window.dispatchEvent(new Event("toolsLoaded"));
+	}
+
+	_pOnLoad_findPageElements () {
+		this._$pgContent = $(`#pagecontent`);
+		this._$wrpTabs = $(`#stat-tabs`);
+	}
+
+	async _pOnLoad_pInitSettingsManager () {
+		if (!this._compSettings) return;
+
+		await this._compSettings.pInit();
+		this._compSettings.bindBtnOpen({btn: document.getElementById("btn-list-settings")});
 	}
 
 	async _pOnLoad_pInitPrimaryLists () {
@@ -1534,12 +1571,14 @@ class ListPage {
 		this._contextMenuList = ContextUtil.getMenu([
 			new ContextUtil.Action(
 				"Popout",
-				(evt, userData) => {
+				async (evt, userData) => {
 					const {ele, selection} = userData;
-					this._handleGenericContextMenuClick_pDoMassPopout(evt, ele, selection);
+					await this._handleGenericContextMenuClick_pDoMassPopout(evt, ele, selection);
 				},
 			),
 			this._getContextActionAdd(),
+			null,
+			this._getContextActionBlocklist(),
 		]);
 	}
 
@@ -1568,6 +1607,16 @@ class ListPage {
 					this._updateSelected();
 				},
 			);
+	}
+
+	_getContextActionBlocklist () {
+		return new ContextUtil.Action(
+			"Add to Blocklist",
+			async (evt, userData) => {
+				const {ele, selection} = userData;
+				await this._handleGenericContextMenuClick_pDoMassBlocklist(evt, ele, selection);
+			},
+		);
 	}
 
 	_getOrTabRightButton (ident, icon, {title} = {}) {
@@ -1680,6 +1729,16 @@ class ListPage {
 			});
 		}
 
+		contextOptions.push(
+			null,
+			new ContextUtil.Action(
+				"Add to Blocklist",
+				async () => {
+					await this._pDoMassBlocklist([this._dataList[Hist.lastLoadedId]]);
+				},
+			),
+		);
+
 		const menu = ContextUtil.getMenu(contextOptions);
 		$btnOptions
 			.off("click")
@@ -1689,6 +1748,25 @@ class ListPage {
 	async _handleGenericContextMenuClick_pDoMassPopout (evt, ele, selection) {
 		const entities = selection.map(listItem => ({entity: this._dataList[listItem.ix], hash: listItem.values.hash}));
 		return _UtilListPage.pDoMassPopout(evt, ele, entities);
+	}
+
+	async _handleGenericContextMenuClick_pDoMassBlocklist (evt, ele, selection) {
+		await this._pDoMassBlocklist(selection.map(listItem => this._dataList[listItem.ix]));
+	}
+
+	async _pDoMassBlocklist (ents) {
+		await ExcludeUtil.pExtendList(
+			ents.map(ent => {
+				return {
+					category: ent.__prop,
+					displayName: ent._displayName || ent.name,
+					hash: UrlUtil.autoEncodeHash(ent),
+					source: ent.source,
+				};
+			}),
+		);
+
+		JqueryUtil.doToast(`Added ${ents.length} entr${ents.length === 1 ? "y" : "ies"} to the blocklist! Reload the page to view any changes.`);
 	}
 
 	doDeselectAll () { this.primaryLists.forEach(list => list.deselectAll()); }
@@ -1737,6 +1815,8 @@ class ListPage {
 		Renderer.utils.bindTabButtons({
 			tabButtons: [tabMetaStats, ...tabMetasAdditional].filter(it => it.isVisible),
 			tabLabelReference: [tabMetaStats, ...tabMetasAdditional].map(it => it.label),
+			$wrpTabs: this._$wrpTabs,
+			$pgContent: this._$pgContent,
 		});
 
 		this._updateSelected();
@@ -1789,6 +1869,8 @@ class ListPage {
 		Renderer.utils.bindTabButtons({
 			tabButtons: tabMetas.filter(it => it.isVisible),
 			tabLabelReference: tabMetas.map(it => it.label),
+			$wrpTabs: this._$wrpTabs,
+			$pgContent: this._$pgContent,
 		});
 	}
 

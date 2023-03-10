@@ -118,10 +118,15 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"gnome"
+							{
+								"tag": "gnome",
+								"prefix": "Deep"
+							}
 						]
 					},
-					"speed": 20
+					"speed": {
+						"walk": 20
+					}
 				},
 				"_mod": {
 					"_": {
@@ -278,7 +283,10 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"elf"
+							{
+								"tag": "elf",
+								"prefix": "Drow"
+							}
 						]
 					}
 				},
@@ -356,10 +364,15 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"dwarf"
+							{
+								"tag": "dwarf",
+								"prefix": "Duergar"
+							}
 						]
 					},
-					"speed": 25
+					"speed": {
+						"walk": 25
+					}
 				},
 				"_mod": {
 					"_": {
@@ -1135,7 +1148,10 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"elf"
+							{
+								"tag": "elf",
+								"prefix": "High"
+							}
 						]
 					}
 				},
@@ -2338,10 +2354,15 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"dwarf"
+							{
+								"tag": "dwarf",
+								"prefix": "Shield"
+							}
 						]
 					},
-					"speed": 25
+					"speed": {
+						"walk": 25
+					}
 				},
 				"_mod": {
 					"_": {
@@ -2536,10 +2557,15 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"gnome"
+							{
+								"tag": "gnome",
+								"prefix": "Rock"
+							}
 						]
 					},
-					"speed": 25
+					"speed": {
+						"walk": 25
+					}
 				},
 				"_mod": {
 					"_": {
@@ -2625,10 +2651,15 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"halfling"
+							{
+								"tag": "halfling",
+								"prefix": "Stout"
+							}
 						]
 					},
-					"speed": 25
+					"speed": {
+						"walk": 25
+					}
 				},
 				"_mod": {
 					"languages": {
@@ -2817,7 +2848,10 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"water genasi"
+							{
+								"tag": "genasi",
+								"prefix": "Water"
+							}
 						]
 					},
 					"speed": {
@@ -2857,10 +2891,15 @@
 					"type": {
 						"type": "humanoid",
 						"tags": [
-							"elf"
+							{
+								"tag": "elf",
+								"prefix": "Wood"
+							}
 						]
 					},
-					"speed": 35
+					"speed": {
+						"walk": 35
+					}
 				},
 				"_mod": {
 					"_": [
@@ -2918,7 +2957,9 @@
 							"yuan-ti"
 						]
 					},
-					"speed": 35
+					"speed": {
+						"walk": 35
+					}
 				},
 				"_mod": {
 					"_": [

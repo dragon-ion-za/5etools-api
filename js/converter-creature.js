@@ -60,13 +60,6 @@ class CreatureParser extends BaseParser {
 	) {
 		if (!meta.curLine) return false;
 
-		if (meta.curLine.trim().endsWith(",")) {
-			const nxtLine = meta.toConvert[++meta.ixToConvert];
-			if (!nxtLine) return false;
-			meta.curLine = `${meta.curLine.trim()} ${nxtLine.trim()}`;
-			return true;
-		}
-
 		if (isCrLine) return false; // avoid absorbing past the CR line
 
 		const nxtLine = meta.toConvert[meta.ixToConvert + 1];
@@ -130,6 +123,8 @@ class CreatureParser extends BaseParser {
 				// endregion
 				// Handle pluses split across lines
 				.replace(/(\+\s*)\n+(\d+)/g, (...m) => `${m[1]}${m[2]}`)
+				// Handle CR XP on separate line
+				.replace(/\n(\([\d,]+ XP\)\n)/g, (...m) => m[1])
 			;
 
 			const statsHeadFootSpl = clean.split(/(Challenge|Proficiency Bonus \(PB\))/i);
@@ -139,18 +134,23 @@ class CreatureParser extends BaseParser {
 				.replace(/(\d\d?\s*\([-—+]?\d+\)\s*)+/gi, (...m) => `${m[0].replace(/\n/g, " ").replace(/\s+/g, " ")}\n`);
 
 			// (re-assemble after cleaning ability scores and) split into lines
-			clean = statsHeadFootSpl.join("").split("\n").filter(it => it && it.trim());
+			clean = statsHeadFootSpl.join("");
+
+			// Re-clean after applying the above
+			clean = this._getCleanInput(clean);
+
+			let cleanLines = clean.split("\n").filter(it => it && it.trim());
 
 			// Split apart "Challenge" and "Proficiency Bonus" if they are on the same line
-			const ixChallengePb = clean.findIndex(line => /^Challenge/.test(line.trim()) && /Proficiency Bonus/.test(line));
+			const ixChallengePb = cleanLines.findIndex(line => /^Challenge/.test(line.trim()) && /Proficiency Bonus/.test(line));
 			if (~ixChallengePb) {
-				let line = clean[ixChallengePb];
+				let line = cleanLines[ixChallengePb];
 				const [challengePart, pbLabel, pbRest] = line.split(/(Proficiency Bonus)/);
-				clean[ixChallengePb] = challengePart;
-				clean.splice(ixChallengePb + 1, 0, [pbLabel, pbRest].join(""));
+				cleanLines[ixChallengePb] = challengePart;
+				cleanLines.splice(ixChallengePb + 1, 0, [pbLabel, pbRest].join(""));
 			}
 
-			return clean;
+			return cleanLines;
 		})();
 
 		const stats = {};
@@ -167,6 +167,14 @@ class CreatureParser extends BaseParser {
 
 			// name of monster
 			if (meta.ixToConvert === 0) {
+				// region
+				const mCr = /^(?<name>.*)\s+(?<cr>CR \d+(?:\/\d+)? .*$)/.exec(meta.curLine);
+				if (mCr) {
+					meta.curLine = mCr.groups.name;
+					meta.toConvert.splice(meta.ixToConvert + 1, 0, mCr.groups.cr);
+				}
+				// endregion
+
 				stats.name = this._getAsTitle("name", meta.curLine, options.titleCaseFields, options.isTitleCase);
 				// If the name is immediately repeated, skip it
 				if ((meta.toConvert[meta.ixToConvert + 1] || "").trim() === meta.curLine) meta.toConvert.splice(meta.ixToConvert + 1, 1);
@@ -177,6 +185,16 @@ class CreatureParser extends BaseParser {
 			if (ConvertUtil.isStatblockLineHeaderStart("CR", meta.curLine)) {
 				// noinspection StatementWithEmptyBodyJS
 				while (this._absorbBrokenLine({isCrLine: true, meta}));
+
+				// Region merge following "<n> XP" line into CR line
+				const lineNxt = meta.toConvert[meta.ixToConvert + 1];
+				if (lineNxt && /^[\d,]+ XP$/.test(lineNxt)) {
+					meta.curLine = `${meta.curLine.trim()} (${lineNxt.trim()})`;
+					meta.toConvert[meta.ixToConvert] = meta.curLine;
+					meta.toConvert.splice(meta.ixToConvert + 1, 1);
+				}
+				// endregion
+
 				this._setCleanCr(stats, meta, {header: "CR"});
 
 				// remove the line, as we expect alignment as line 1
@@ -194,6 +212,14 @@ class CreatureParser extends BaseParser {
 				meta.toConvert.splice(meta.ixToConvert, 1);
 				meta.ixToConvert--;
 
+				continue;
+			}
+
+			// homebrew resources: "souls"
+			if (this._RE_BREW_RESOURCE_SOULS.test(meta.curLine)) {
+				this._brew_setResourceSouls(stats, meta, options);
+				meta.toConvert.splice(meta.ixToConvert, 1);
+				meta.ixToConvert--;
 				continue;
 			}
 
@@ -251,7 +277,10 @@ class CreatureParser extends BaseParser {
 			}
 
 			// saves (optional)
-			if (ConvertUtil.isStatblockLineHeaderStart("Saving Throws", meta.curLine)) {
+			if (
+				ConvertUtil.isStatblockLineHeaderStart("Saving Throws", meta.curLine)
+				|| ConvertUtil.isStatblockLineHeaderStart("Saves", meta.curLine)
+			) {
 				// noinspection StatementWithEmptyBodyJS
 				while (this._absorbBrokenLine({meta}));
 				this._setCleanSaves(stats, meta.curLine, options);
@@ -488,6 +517,8 @@ class CreatureParser extends BaseParser {
 
 		this._doCleanLegendaryActionHeader(stats);
 
+		this._addExtraTypeTags(stats, meta);
+
 		this._doStatblockPostProcess(stats, false, options);
 		const statsOut = PropOrder.getOrdered(stats, "monster");
 		options.cbOutput(statsOut, options.isAppend);
@@ -655,6 +686,7 @@ class CreatureParser extends BaseParser {
 		const doOutputStatblock = () => {
 			if (trait != null) doAddFromParsed();
 			if (stats) {
+				this._addExtraTypeTags(stats, meta);
 				this._doStatblockPostProcess(stats, true, options);
 				const statsOut = PropOrder.getOrdered(stats, "monster");
 				options.cbOutput(statsOut, options.isAppend);
@@ -1316,13 +1348,15 @@ class CreatureParser extends BaseParser {
 				stats.sizeNote = note.join("").trim();
 			}
 		}
+	}
 
-		if (meta.additionalTypeTags.length) {
-			// Transform to complex form if simple
-			if (!stats.type.type) stats.type = {type: stats.type};
-			if (!stats.type.tags?.length) stats.type.tags = [];
-			stats.type.tags.push(...meta.additionalTypeTags);
-		}
+	static _addExtraTypeTags (stats, meta) {
+		if (!meta.additionalTypeTags?.length) return;
+
+		// Transform to complex form if simple
+		if (!stats.type.type) stats.type = {type: stats.type};
+		if (!stats.type.tags?.length) stats.type.tags = [];
+		stats.type.tags.push(...meta.additionalTypeTags);
 	}
 
 	static _setCleanHp (stats, line) {
@@ -1352,9 +1386,9 @@ class CreatureParser extends BaseParser {
 			const spl = stats.save.split(",").map(it => it.trim().toLowerCase()).filter(it => it);
 			const nu = {};
 			spl.forEach(it => {
-				const m = /(\w+)\s*([-+])\s*(\d+)/.exec(it);
+				const m = /^(?<abil>\w+)\s*(?<sign>[-+])\s*(?<save>\d+)(?<plusPb>(?:\s+plus\s+|\s*\+\s*)PB)?$/i.exec(it);
 				if (m) {
-					nu[m[1]] = `${m[2]}${m[3]}`;
+					nu[m.groups.abil] = `${m.groups.sign}${m.groups.save}${m.groups.plusPb ? m.groups.plusPb.replace(/\bpb\b/gi, "PB") : ""}`;
 				} else {
 					options.cbWarning(`${stats.name ? `(${stats.name}) ` : ""}Save "${it}" requires manual conversion`);
 				}
@@ -1366,14 +1400,18 @@ class CreatureParser extends BaseParser {
 	static _setCleanSkills (stats, line) {
 		stats.skill = ConvertUtil.getStatblockLineHeaderText("Skills", line).toLowerCase();
 		const split = stats.skill.split(",").map(it => it.trim()).filter(Boolean);
+
+		const reSkill = new RegExp(`^(?<skill>${Object.keys(Parser.SKILL_TO_ATB_ABV).join("|")})\\s+(?<val>.*)$`, "i");
+
 		const newSkills = {};
 		try {
 			split.forEach(s => {
-				const splSpace = s.split(" ");
-				const val = splSpace.pop().trim();
-				let name = splSpace.join(" ").toLowerCase().trim().replace(/ /g, "");
-				name = this.SKILL_SPACE_MAP[name] || name;
-				newSkills[name] = val;
+				const m = reSkill.exec(s);
+				if (!m) {
+					options.cbWarning(`${stats.name ? `(${stats.name}) ` : ""}Skill "${s}" requires manual conversion`);
+					return;
+				}
+				newSkills[m.groups.skill] = m.groups.val.replace(/\b\+?pb\b/g, "PB");
 			});
 			stats.skill = newSkills;
 			if (stats.skill[""]) delete stats.skill[""]; // remove empty properties
@@ -1476,11 +1514,21 @@ class CreatureParser extends BaseParser {
 
 		if (stats.pbNote && !isNaN(stats.pbNote) && Parser.crToPb(stats.cr) === Number(stats.pbNote)) delete stats.pbNote;
 	}
+
+	// region SHARED HOMEBREW PARSING FUNCTIONS /////////////////////////////////////////////////////////////////////////
+	static _RE_BREW_RESOURCE_SOULS = /^Souls (?<value>\d+) \((?<formula>[^)]+)\)$/;
+
+	static _brew_setResourceSouls (stats, meta, options) {
+		const m = this._RE_BREW_RESOURCE_SOULS.exec(meta.curLine);
+		(stats.resource = stats.resource || [])
+			.push({
+				name: "Souls",
+				value: Number(m.groups.value),
+				formula: m.groups.formula,
+			});
+	}
+	// endregion
 }
-CreatureParser.SKILL_SPACE_MAP = {
-	"sleightofhand": "sleight of hand",
-	"animalhandling": "animal handling",
-};
 CreatureParser._PROPS_ENTRIES = [
 	"trait",
 	"action",

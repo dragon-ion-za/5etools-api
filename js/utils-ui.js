@@ -115,6 +115,7 @@ function MixinProxyBase (Cls) {
 		_addHook (hookProp, prop, hook) {
 			ProxyBase._addHook_to(this.__hooks, hookProp, prop, hook);
 			if (this.__hooksTmp) ProxyBase._addHook_to(this.__hooksTmp, hookProp, prop, hook);
+			return hook;
 		}
 
 		static _addHook_to (obj, hookProp, prop, hook) {
@@ -963,10 +964,14 @@ class ListUiUtil {
 			return this._getSearchCache_entries(entity);
 		}
 
+		static _INDEXABLE_PROPS_ENTRIES = [
+			"entries",
+		];
+
 		_getSearchCache_entries (entity) {
-			if (!entity.entries) return "";
+			if (this.constructor._INDEXABLE_PROPS_ENTRIES.every(it => !entity[it])) return "";
 			const ptrOut = {_: ""};
-			this._getSearchCache_handleEntryProp(entity, "entries", ptrOut);
+			this.constructor._INDEXABLE_PROPS_ENTRIES.forEach(it => this._getSearchCache_handleEntryProp(entity, it, ptrOut));
 			return ptrOut._;
 		}
 
@@ -1287,6 +1292,9 @@ class TabUiUtil extends TabUiUtilBase {
 		obj.__$getDispTabTitle = function () { return null; };
 	}
 }
+
+globalThis.TabUiUtil = TabUiUtil;
+
 TabUiUtil.TabMeta = class extends TabUiUtilBase.TabMeta {
 	constructor (opts) {
 		super(opts);
@@ -1351,6 +1359,8 @@ class TabUiUtilSide extends TabUiUtilBase {
 		};
 	}
 }
+
+globalThis.TabUiUtilSide = TabUiUtilSide;
 
 // TODO have this respect the blocklist?
 class SearchUiUtil {
@@ -5566,6 +5576,18 @@ class SettingsUtil {
 			this.name = name;
 			this.help = help;
 			this.defaultVal = defaultVal;
+		}
+	};
+
+	static EnumSetting = class extends SettingsUtil.Setting {
+		constructor (
+			{
+				enumVals,
+				...rest
+			},
+		) {
+			super(rest);
+			this.enumVals = enumVals;
 		}
 	};
 
