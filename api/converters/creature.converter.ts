@@ -7,7 +7,7 @@ import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, bui
     buildActionGroupActionsFromSpellcasting, 
     buildActionGroupActionsFromLegendaryGroupActions} from "./sharedConverters";
 
-export function creatureEntityToModelConverter(entity: CreatureEntity, legendaryGroups: LegendaryGroupEntity[]): CreatureModel {
+export function creatureEntityToModelConverter(host: string, entity: CreatureEntity, legendaryGroups: LegendaryGroupEntity[]): CreatureModel {
     let model: CreatureModel = new CreatureModel(entity.name);
 
     model.sourceId = entity.source;
@@ -72,6 +72,8 @@ export function creatureEntityToModelConverter(entity: CreatureEntity, legendary
             model.actionGroups.push(buildActionGroupActionsFromLegendaryGroupActions('Mythic Encounter', legendaryGroup.mythicEncounter));
         }
     }
+
+    model.imageUrl = `${host}/creatures/image/${model.sourceId}/${model.name}`;
 
     return model;
 };

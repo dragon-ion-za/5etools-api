@@ -9,7 +9,7 @@ export class CreaturesController {
 
     public static getCreatures = (req: any, res: any) => {
         const files = ['bestiary-mm.json', 'bestiary-dmg.json', 'bestiary-phb.json', 'bestiary-idrotf.json'];
-    
+        
         let creatures: CreatureModel[] = [];
         let dataFilter = this.buildOdataCreatureFilter(req.query);
     
@@ -20,7 +20,7 @@ export class CreaturesController {
             jsonCreatures.monster
                 .filter((x: CreatureEntity) => x._copy == null)
                 .filter((x: CreatureEntity) => dataFilter(x))
-                .map((x: CreatureEntity) => creatureEntityToModelConverter(x, legendaryGroups.legendaryGroup))
+                .map((x: CreatureEntity) => creatureEntityToModelConverter(req.protocol + '://' + req.get('host'), x, legendaryGroups.legendaryGroup))
                 .forEach((x: CreatureModel) => creatures.push(x));
         });
     
