@@ -8,6 +8,7 @@ import { PartiesController } from './controllers/parties.controller';
 export const router = express.Router();
 
 router.get('/creatures', CreaturesController.getCreatures);
+router.get('/creatures/:name', CreaturesController.getCreature);
 router.get('/creatures/image/:sourceId/:name', CreaturesController.getCreatureImage);
 
 router.get('/adventures', AdventuresController.getAdventures);

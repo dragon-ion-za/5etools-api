@@ -7,12 +7,29 @@ import { readFile } from "../services/readFile.service";
 
 export class CreaturesController {
 
-    public static getCreatures = (req: any, res: any) => {
+    public static getCreatures = (req: any, res: any) => {    
+        res.send(this.doCreatureSearch(req.query.$filter ?? '', req.protocol + '://' + req.get('host')));
+    }
+
+    public static getCreature = (req: any, res: any) => {
+        let creatures: CreatureModel[] = this.doCreatureSearch(`name eq ${req.params.name}`, req.protocol + '://' + req.get('host'));
+        if (creatures.length > 0) {
+            res.send(creatures[0]);
+        } else {
+            res.send([]);
+        }
+    }
+    
+    public static getCreatureImage = (req: any, res: any) => {
+        res.sendFile(`img/${req.params.sourceId}/${req.params.name}.png`, { root: path.join(__dirname, '../../') });
+    };
+
+    private static doCreatureSearch = (query: string, hostString: string): CreatureModel[] => {
         const files = ['bestiary-mm.json', 'bestiary-dmg.json', 'bestiary-phb.json', 'bestiary-idrotf.json'];
         
         let creatures: CreatureModel[] = [];
-        let dataFilter = this.buildOdataCreatureFilter(req.query);
-    
+        let dataFilter = this.buildOdataCreatureFilter(query);
+        
         let legendaryGroups = readFile(`../data/bestiary/legendarygroups.json`);
     
         files.forEach(file => {
@@ -20,21 +37,17 @@ export class CreaturesController {
             jsonCreatures.monster
                 .filter((x: CreatureEntity) => x._copy == null)
                 .filter((x: CreatureEntity) => dataFilter(x))
-                .map((x: CreatureEntity) => creatureEntityToModelConverter(req.protocol + '://' + req.get('host'), x, legendaryGroups.legendaryGroup))
+                .map((x: CreatureEntity) => creatureEntityToModelConverter(hostString, x, legendaryGroups.legendaryGroup))
                 .forEach((x: CreatureModel) => creatures.push(x));
         });
-    
-        res.send(creatures);
+
+        return creatures;
     }
     
-    public static getCreatureImage = (req: any, res: any) => {
-        res.sendFile(`img/${req.params.sourceId}/${req.params.name}.png`, { root: path.join(__dirname, '../../') });
-    };
+    private static buildOdataCreatureFilter(reqQuery: string) : (x: CreatureEntity) => any {
     
-    private static buildOdataCreatureFilter(reqQuery: any) : (x: CreatureEntity) => any {
-    
-        if (reqQuery.$filter) {
-            let filterValues: string[] = reqQuery.$filter.split(' ');
+        if (reqQuery !== undefined) {
+            let filterValues: string[] = reqQuery.split(' ');
     
             return (x: CreatureEntity) => { 
                 type ObjectKey = keyof typeof x;
@@ -47,7 +60,7 @@ export class CreaturesController {
                         return (x[filterKey] as string).toLocaleLowerCase().indexOf(searchValue) > -1;
     
                     default:
-                        return (x[filterKey] as string).toLocaleLowerCase() === searchValue;
+                        return (x[filterKey] as string) === searchValue;
                 }
     
                 
