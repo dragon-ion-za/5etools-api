@@ -37,12 +37,7 @@ export function creatureEntityToModelConverter(host: string, entity: CreatureEnt
     model.immunities = buildImmunities(entity.immune, entity.conditionImmune);
     model.languages = entity.languages ?? [];
     model.challengeRating = Number.parseInt(entity.cr);
-    model.traits = buildTraits(entity.trait);
-    model.actions = buildTraits(entity.action);
-    model.reactions = buildTraits(entity.reaction);
-    model.legendaryActions = buildTraits(entity.legendary);
     model.legendaryCount = entity.legendaryActions ?? 3;
-    model.spellcasting = buildSpellcasting(entity.spellcasting);
     model.senses = entity.senses ?? [];
     model.savingThrows = builsSavingThrows(entity.save);
 
