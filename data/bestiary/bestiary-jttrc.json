@@ -45,7 +45,8 @@
 				"Fey Ancestry",
 				"Magic Resistance"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Amanisha Manivarshi",
@@ -75,7 +76,8 @@
 				"N",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Ameyali",
@@ -105,7 +107,8 @@
 				"N",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Ashen Heir Anarchist",
@@ -122,7 +125,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Ashen Heir Assassin",
@@ -142,7 +146,8 @@
 				"name": "Mage",
 				"source": "MM"
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Ashen Heir Veteran",
@@ -176,7 +181,8 @@
 				"L",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Atiba-Pa",
@@ -206,7 +212,8 @@
 				"L",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Aunt Dellie",
@@ -226,7 +233,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Aurumvorax",
@@ -304,6 +312,9 @@
 						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) slashing damage. If the target is a Medium or smaller creature, it is {@condition grappled} (escape {@dc 12}). Until this grapple ends, the aurumvorax can't use its Claw attack on another target, and when it moves, it can drag the {@condition grappled} creature with it, without the aurumvorax's speed being halved."
 					]
 				}
+			],
+			"traitTags": [
+				"Tunneler"
 			],
 			"senseTags": [
 				"D"
@@ -419,6 +430,9 @@
 					]
 				}
 			],
+			"traitTags": [
+				"Tunneler"
+			],
 			"senseTags": [
 				"D"
 			],
@@ -457,7 +471,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Azra Nir",
@@ -477,7 +492,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Bakunawa",
@@ -646,7 +662,8 @@
 				"C",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Dinosaur Skeleton",
@@ -709,7 +726,8 @@
 					]
 				}
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Diva Luma",
@@ -743,7 +761,8 @@
 					]
 				}
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Djeneba",
@@ -773,7 +792,8 @@
 				"C",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Dragon Hunter",
@@ -833,7 +853,8 @@
 			"alignment": [
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Farmer",
@@ -851,7 +872,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Gammon Xungoon",
@@ -883,7 +905,8 @@
 				"Pack Tactics",
 				"Sunlight Sensitivity"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Haint",
@@ -1045,7 +1068,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Jijibisha Manivarshi",
@@ -1109,7 +1133,8 @@
 				"N",
 				"E"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Kasem Aroon",
@@ -1139,7 +1164,8 @@
 				"C",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Kedjou Kamal",
@@ -1169,7 +1195,8 @@
 				"N",
 				"E"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Kianna",
@@ -1199,7 +1226,8 @@
 				"C",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Koi Prawn",
@@ -1216,7 +1244,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Kun Ahn-Jun",
@@ -1246,7 +1275,8 @@
 				"N",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Kusa Xungoon",
@@ -1278,7 +1308,8 @@
 				"Pack Tactics",
 				"Sunlight Sensitivity"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Lady Dre",
@@ -1308,7 +1339,8 @@
 				"C",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Laleh Ghorbani",
@@ -1340,7 +1372,8 @@
 				"Fey Ancestry",
 				"Keen Senses"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Lamai Tyenmo",
@@ -1368,7 +1401,8 @@
 				"L",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Lu Zhong Yin",
@@ -1398,7 +1432,8 @@
 				"L",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Lungtian",
@@ -1422,7 +1457,8 @@
 				"C",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Madam Kulp",
@@ -1449,7 +1485,8 @@
 			"alignment": [
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Myx Nargis Ruba",
@@ -1480,7 +1517,8 @@
 			"traitTags": [
 				"Aggressive"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Navid",
@@ -1506,7 +1544,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Nene",
@@ -1531,7 +1570,8 @@
 			"languages": [
 				"Understands simple phrases and concepts in Common"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Nightsea chil-liren",
@@ -1595,7 +1635,8 @@
 				"N",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Ollin",
@@ -1637,7 +1678,8 @@
 				"CC",
 				"I"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Paloma",
@@ -1665,7 +1707,8 @@
 				"C",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Paolo Maykapal",
@@ -1685,7 +1728,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Pari",
@@ -1881,7 +1925,8 @@
 			"ac": [
 				11
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Prince Simbon",
@@ -1920,7 +1965,8 @@
 			"ac": [
 				11
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Riverine",
@@ -1978,7 +2024,11 @@
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"The riverine casts one of the following spells, requiring no material components and using Charisma as the spellcasting ability (spell save {@dc 17}): At-will: control water, fog cloud"
+						"The riverine casts one of the following spells, requiring no material components and using Charisma as the spellcasting ability (spell save {@dc 17}):"
+					],
+					"will": [
+						"{@spell control water}",
+						"{@spell fog cloud}"
 					],
 					"daily": {
 						"1": [
@@ -2126,7 +2176,8 @@
 				"Fey Ancestry",
 				"Sneak Attack"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Serapio",
@@ -2146,7 +2197,8 @@
 					}
 				}
 			},
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Sholeh",
@@ -2170,7 +2222,8 @@
 				"N",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Soul Shaker",
@@ -2571,7 +2624,8 @@
 				"L",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Tungsten Ward",
@@ -2601,7 +2655,8 @@
 				"L",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Uzoma Baten",
@@ -2629,7 +2684,8 @@
 				"L",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Vi Aroon",
@@ -2659,7 +2715,8 @@
 				"C",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Wei Feng Ying",
@@ -2689,7 +2746,8 @@
 				"L",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Whistler",
@@ -2842,7 +2900,8 @@
 				"L",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Wynling",
@@ -2970,7 +3029,8 @@
 			"alignment": [
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Yarana",
@@ -3000,7 +3060,8 @@
 				"N",
 				"G"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Young-Gi",
@@ -3027,7 +3088,8 @@
 			"alignment": [
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		},
 		{
 			"name": "Zisatta",
@@ -3051,7 +3113,8 @@
 				"L",
 				"N"
 			],
-			"hasToken": true
+			"hasToken": true,
+			"hasFluffImages": true
 		}
 	]
 }

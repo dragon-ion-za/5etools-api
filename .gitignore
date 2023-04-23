@@ -21,4 +21,6 @@ sitemap.xml
 # Generated service worker files
 sw.js
 sw-injector.js
-/.vs
+
+# Log files
+*.log
