@@ -2,8 +2,6 @@ const express = require("express");
 
 import { AdventuresController } from './controllers/adventures.controller';
 import { CreaturesController } from './controllers/creatures.controller';
-import { EncountersController } from './controllers/encounters.controller';
-import { PartiesController } from './controllers/parties.controller';
 
 export const router = express.Router();
 
@@ -13,12 +11,3 @@ router.get('/creatures/image/:sourceId/:name', CreaturesController.getCreatureIm
 
 router.get('/adventures', AdventuresController.getAdventures);
 router.get('/adventures/:id', AdventuresController.getAdventureById);
-
-router.get('/parties', PartiesController.getParties);
-router.get('/parties/:name', PartiesController.getPartyByName);
-router.get('/parties/characterimage/:name', PartiesController.getCharacterImage);
-
-router.post('/encounters', EncountersController.saveEncounter);
-router.put('/encounters', EncountersController.updateEncounter);
-router.get('/encounters', EncountersController.getEncounters);
-router.get('/encounters/:id', EncountersController.getEncounterById);
