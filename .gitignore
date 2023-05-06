@@ -25,3 +25,4 @@ sw-injector.js
 # Log files
 *.log
 /.vs
+/api/dist
