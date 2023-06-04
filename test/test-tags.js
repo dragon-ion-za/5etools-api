@@ -493,7 +493,7 @@ class ScaleDiceCheck extends DataTesterBase {
 			const spl = m2.split("|");
 			if (spl.length < 3) {
 				this._addMessage(`${m1} tag "${str}" was too short!\n`);
-			} else if (spl.length > 4) {
+			} else if (spl.length > 5) {
 				this._addMessage(`${m1} tag "${str}" was too long!\n`);
 			} else {
 				let range;
@@ -504,7 +504,7 @@ class ScaleDiceCheck extends DataTesterBase {
 					return;
 				}
 				if (range.size < 2) this._addMessage(`Invalid scaling dice in file ${filePath}: range "${spl[1]}" has too few entries! Should be 2 or more.\n`);
-				if (spl[4] && spl[4] !== "psi") this._addMessage(`Unknown mode "${spl[4]}".\n`);
+				if (spl[3] && spl[3] !== "psi") this._addMessage(`Unknown mode "${spl[4]}".\n`);
 			}
 			return m0;
 		});
@@ -539,7 +539,7 @@ class TableDiceTest extends DataTesterBase {
 	static _checkTable (obj, {filePath}) {
 		if (obj.type !== "table") return;
 
-		const autoRollMode = Renderer.getAutoConvertedTableRollMode(obj);
+		const autoRollMode = Renderer.table.getAutoConvertedRollMode(obj);
 		if (!autoRollMode) return;
 
 		const toRenderLabel = autoRollMode ? RollerUtil.getFullRollCol(obj.colLabels[0]) : null;
@@ -593,7 +593,7 @@ class TableDiceTest extends DataTesterBase {
 				const max = wrpRollTree.tree.max({});
 				for (let i = min; i < max + 1; ++i) possibleRolls.add(i);
 			} else {
-				if (!hasPrompt) errors.push(`"${obj.colLabels[0]}" was not a valid rollable header?!`);
+				if (!hasPrompt) errors.push(`${JSON.stringify(obj.colLabels[0])} was not a valid rollable header?!`);
 			}
 		});
 
