@@ -1,0 +1,60 @@
+name: API CD
+
+on:
+  workflow_dispatch:
+
+env:
+  ARTIFACT_NAME: 'api'
+
+jobs:
+  build:
+    uses: dragon-ion-za/3ncount3r/.github/workflows/step_build.yml@master
+    with:
+      sourcePath: "api"
+      artifactName: "api"
+
+  generateVersion:
+    needs: build
+    uses: dragon-ion-za/3ncount3r/.github/workflows/generate_version.yml@master
+    with:
+      lastTag: ${{ needs.build.outputs.lastTag }}
+      versionName: ${{ needs.build.outputs.versionName }}
+
+  dockerBuildAndPublish:
+    needs: generateVersion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+
+      - name: GitHubCR Login
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Image
+        run: docker build . --file "dockerfile" --tag "ghcr.io/dragon-ion-za/5eapi:${{ needs.generateVersion.outputs.nextVersion }}"
+
+      - name: Push Image
+        run: docker push ghcr.io/dragon-ion-za/5eapi:${{ needs.generateVersion.outputs.nextVersion }}
+
+  tag:
+    needs: [generateVersion, dockerBuildAndPublish]
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Create tag
+        if: ${{ !env.ACT }}
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ needs.generateVersion.outputs.nextVersion }}',
+              sha: context.sha
+            })
