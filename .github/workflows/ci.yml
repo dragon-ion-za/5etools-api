@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    uses: dragon-ion-za/3ncount3r/.github/workflows/step_build.yml@master
+    uses: dragon-ion-za/3ncount3r/.github/workflows/step_build.yml@main
     with:
       sourcePath: "api"
       artifactName: "api"
