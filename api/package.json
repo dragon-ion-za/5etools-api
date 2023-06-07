@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "1.0.0",
+  "version": "Aid",
   "description": "",
   "main": "server.ts",
   "scripts": {
