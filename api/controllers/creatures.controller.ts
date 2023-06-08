@@ -1,4 +1,5 @@
 const path = require('path');
+const config = require('config');
 
 import { creatureEntityToModelConverter } from "../converters/creature.converter";
 import { CreatureEntity } from "../entities/creature.entity";
@@ -21,7 +22,7 @@ export class CreaturesController {
     }
     
     public static getCreatureImage = (req: any, res: any) => {
-        res.sendFile(`img/${req.params.sourceId}/${req.params.name}.png`, { root: path.join(__dirname, '../../') });
+        res.sendFile(`img/${req.params.sourceId}/${req.params.name}.png`, { root: config.get("dataFileRoot") });
     };
 
     private static doCreatureSearch = (query: string, hostString: string): CreatureModel[] => {
@@ -30,10 +31,10 @@ export class CreaturesController {
         let creatures: CreatureModel[] = [];
         let dataFilter = this.buildOdataCreatureFilter(query);
         
-        let legendaryGroups = readFile(`../data/bestiary/legendarygroups.json`);
+        let legendaryGroups = readFile(`${config.get("dataFileRoot")}data/bestiary/legendarygroups.json`);
     
         files.forEach(file => {
-            let jsonCreatures = readFile(`../data/bestiary/${file}`);
+            let jsonCreatures = readFile(`${config.get("dataFileRoot")}data/bestiary/${file}`);
             jsonCreatures.monster
                 .filter((x: CreatureEntity) => x._copy == null)
                 .filter((x: CreatureEntity) => dataFilter(x))
