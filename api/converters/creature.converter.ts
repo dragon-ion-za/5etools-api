@@ -3,7 +3,7 @@ import { LegendaryGroupEntity } from "../entities/legendary-group.entity";
 import { Spellcasting, Type } from "../entities/sharedEntities";
 import { CreatureModel } from "../models/creature.model";
 import { convertSizeToEnum, convertToArmourClassModel, convertToFlyingSpeed, buildSpeedConditions, buildSkillModifiers, 
-    buildResistances, buildImmunities, buildTraits, buildSpellcasting, buildLairActions, builsSavingThrows, buildActionGroupActionsFromTraits, 
+    buildResistances, buildImmunities, buildLairActions, builsSavingThrows, buildActionGroupActionsFromTraits, 
     buildActionGroupActionsFromSpellcasting, 
     buildActionGroupActionsFromLegendaryGroupActions} from "./sharedConverters";
 
