@@ -26,7 +26,7 @@ export class CreaturesController {
     };
 
     private static doCreatureSearch = (query: string, hostString: string): CreatureModel[] => {
-        const files = ['bestiary-mm.json', 'bestiary-dmg.json', 'bestiary-phb.json', 'bestiary-idrotf.json'];
+        const files = config.get("bestiaries") as string[];
         
         let creatures: CreatureModel[] = [];
         let dataFilter = this.buildOdataCreatureFilter(query);
@@ -41,7 +41,7 @@ export class CreaturesController {
                 .map((x: CreatureEntity) => creatureEntityToModelConverter(hostString, x, legendaryGroups.legendaryGroup))
                 .forEach((x: CreatureModel) => creatures.push(x));
         });
-
+        
         return creatures;
     }
     
