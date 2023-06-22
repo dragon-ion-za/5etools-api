@@ -1,4 +1,9 @@
 {
     "port": 5005,
-    "dataFileRoot": "../"
+    "dataFileRoot": "../",
+    "bestiaries": [
+        "bestiary-mm.json", 
+        "bestiary-dmg.json", 
+        "bestiary-phb.json"
+    ]
 }
